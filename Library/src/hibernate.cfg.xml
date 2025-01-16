@@ -17,6 +17,21 @@
     <property name="hibernate.hbm2ddl.auto">update</property>
 
     <!-- Annotated classes -->
-<!--    <mapping class="com.syos.entity.YourEntity" />-->
+    <mapping class="main.java.com.syos.data.model.Item" />
+    <mapping class="main.java.com.syos.data.model.Shelf" />
+    <mapping class="main.java.com.syos.data.model.MainStoreStock" />
+    <mapping class="main.java.com.syos.data.model.WebShopInventory" />
+    <mapping class="main.java.com.syos.data.model.Customer" />
+    <mapping class="main.java.com.syos.data.model.Discount" />
+    <mapping class="main.java.com.syos.data.model.Bill" />
+    <mapping class="main.java.com.syos.data.model.BillItem" />
+    <mapping class="main.java.com.syos.data.model.Transaction" />
+    <mapping class="main.java.com.syos.data.model.Return" />
+    <mapping class="main.java.com.syos.data.model.User" />
+    <mapping class="main.java.com.syos.data.model.Role" />
+    <mapping class="main.java.com.syos.data.model.Permissions" />
+    <mapping class="main.java.com.syos.data.model.RolePermission" />
+    <mapping class="main.java.com.syos.data.model.UserRole" />
+    <mapping class="main.java.com.syos.data.model.UserLogs" />
   </session-factory>
 </hibernate-configuration>
