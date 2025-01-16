@@ -213,4 +213,28 @@ public class Item {
     public void setReturns(List<Return> returns) {
         this.returns = returns;
     }
+
+    // Constructors
+    public Item() {
+    }
+
+    public Item(String itemCode, String batchCode) {
+        this.itemCode = itemCode;
+        this.batchCode = batchCode;
+    }
+
+    public Item(String itemCode, String batchCode, String itemName, double price, Date purchaseDate, Date expiryDate, int initialQuantity, int currentQuantity, boolean isActive, boolean isDeleted, Integer updatedBy, Date updatedDateTime) {
+        this.itemCode = itemCode;
+        this.batchCode = batchCode;
+        this.itemName = itemName;
+        this.price = price;
+        this.purchaseDate = purchaseDate;
+        this.expiryDate = expiryDate;
+        this.initialQuantity = initialQuantity;
+        this.currentQuantity = currentQuantity;
+        this.isActive = isActive;
+        this.isDeleted = isDeleted;
+        this.updatedBy = updatedBy;
+        this.updatedDateTime = updatedDateTime;
+    }
 }
