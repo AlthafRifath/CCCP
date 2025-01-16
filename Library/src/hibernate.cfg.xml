@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+  <session-factory>
+    <!-- Database connection settings -->
+    <property name="hibernate.connection.driver_class">com.microsoft.sqlserver.jdbc.SQLServerDriver</property>
+    <property name="hibernate.connection.url">jdbc:sqlserver://localhost:1433;databaseName=SYOS;encrypt=true;trustServerCertificate=true</property>
+    <property name="hibernate.connection.username">admin</property>
+    <property name="hibernate.connection.password">1100</property>
+
+    <!-- Hibernate properties -->
+    <property name="hibernate.transaction.coordinator_class">jdbc</property>
+    <property name="hibernate.show_sql">true</property>
+    <property name="hibernate.format_sql">true</property>
+    <property name="hibernate.hbm2ddl.auto">update</property>
+
+    <!-- Annotated classes -->
+<!--    <mapping class="com.syos.entity.YourEntity" />-->
+  </session-factory>
+</hibernate-configuration>

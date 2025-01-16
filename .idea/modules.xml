@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/Cli/Cli.iml" filepath="$PROJECT_DIR$/Cli/Cli.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Data/Data.iml" filepath="$PROJECT_DIR$/Data/Data.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Library/Library.iml" filepath="$PROJECT_DIR$/Library/Library.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Public/Public.iml" filepath="$PROJECT_DIR$/Public/Public.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Reports/Reports.iml" filepath="$PROJECT_DIR$/Reports/Reports.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Resources/Resources.iml" filepath="$PROJECT_DIR$/Resources/Resources.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Service/Service.iml" filepath="$PROJECT_DIR$/Service/Service.iml" />
+    </modules>
+  </component>
+</project>
