@@ -22,4 +22,37 @@ public class RolePermission {
     @ManyToOne
     @JoinColumn(name = "PermissionID", insertable = false, updatable = false)
     private Permissions permission;
+
+    // Getters and Setters
+    public int getRoleID() {
+        return roleID;
+    }
+
+    public void setRoleID(int roleID) {
+        this.roleID = roleID;
+    }
+
+    public int getPermissionID() {
+        return permissionID;
+    }
+
+    public void setPermissionID(int permissionID) {
+        this.permissionID = permissionID;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    public Permissions getPermission() {
+        return permission;
+    }
+
+    public void setPermission(Permissions permission) {
+        this.permission = permission;
+    }
 }
