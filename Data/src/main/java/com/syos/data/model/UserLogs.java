@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name = "UserLogs")
+@Table(name = "tblUserLogs")
 public class UserLogs {
 
     @Id
@@ -77,5 +77,21 @@ public class UserLogs {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    // Override equals() and hashCode() in all composite key classes
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        UserLogs userLogs = (UserLogs) o;
+
+        return logID == userLogs.logID;
+    }
+
+    @Override
+    public int hashCode() {
+        return logID;
     }
 }

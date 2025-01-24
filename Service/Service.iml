@@ -21,5 +21,6 @@
     <orderEntry type="module" module-name="Cli" exported="" />
     <orderEntry type="module" module-name="Reports" exported="" />
     <orderEntry type="module" module-name="Data" exported="" />
+    <orderEntry type="module" module-name="Public" />
   </component>
 </module>

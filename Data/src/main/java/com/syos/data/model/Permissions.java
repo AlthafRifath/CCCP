@@ -3,8 +3,10 @@ package main.java.com.syos.data.model;
 import jakarta.persistence.*;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
+
 @Entity
-@Table(name = "Permissions")
+@Table(name = "tblPermissions")
 public class Permissions {
 
     @Id
@@ -111,5 +113,19 @@ public class Permissions {
 
     public void setRolePermissions(List<RolePermission> rolePermissions) {
         this.rolePermissions = rolePermissions;
+    }
+
+    // Override equals() and hashCode() in all composite key classes
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Permissions that = (Permissions) o;
+        return permissionID == that.permissionID;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(permissionID);
     }
 }

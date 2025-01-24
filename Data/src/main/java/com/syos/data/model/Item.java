@@ -3,9 +3,10 @@ package main.java.com.syos.data.model;
 import jakarta.persistence.*;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
-@Table(name = "Item")
+@Table(name = "tblItem")
 public class Item {
 
     @Id
@@ -236,5 +237,19 @@ public class Item {
         this.isDeleted = isDeleted;
         this.updatedBy = updatedBy;
         this.updatedDateTime = updatedDateTime;
+    }
+
+    // Override equals() and hashCode() in all composite key classes
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Item)) return false;
+        Item item = (Item) o;
+        return itemCode.equals(item.itemCode) && batchCode.equals(item.batchCode);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(itemCode, batchCode);
     }
 }

@@ -3,7 +3,7 @@ package main.java.com.syos.data.model;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "UserRole")
+@Table(name = "tblUserRole")
 public class UserRole {
 
     @Id
@@ -54,5 +54,24 @@ public class UserRole {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    // Override equals() and hashCode() in all composite key classes
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        UserRole that = (UserRole) o;
+
+        if (userID != that.userID) return false;
+        return roleID == that.roleID;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = userID;
+        result = 31 * result + roleID;
+        return result;
     }
 }

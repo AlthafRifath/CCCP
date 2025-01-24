@@ -2,9 +2,10 @@ package main.java.com.syos.data.model;
 
 import jakarta.persistence.*;
 import java.util.Date;
+import java.util.Objects;
 
 @Entity
-@Table(name = "Shelf")
+@Table(name = "tblShelf")
 public class Shelf {
 
     @Id
@@ -126,5 +127,19 @@ public class Shelf {
 
     public void setUpdatedByUser(User updatedByUser) {
         this.updatedByUser = updatedByUser;
+    }
+
+    // Override equals() and hashCode() in all composite key classes
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Shelf)) return false;
+        Shelf shelf = (Shelf) o;
+        return getShelfID() == shelf.getShelfID();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getShelfID());
     }
 }

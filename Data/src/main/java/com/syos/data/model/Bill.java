@@ -3,8 +3,10 @@ package main.java.com.syos.data.model;
 import jakarta.persistence.*;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
+
 @Entity
-@Table(name = "Bill")
+@Table(name = "tblBill")
 public class Bill {
 
     @Id
@@ -190,5 +192,19 @@ public class Bill {
 
     public void setTransactions(List<Transaction> transactions) {
         this.transactions = transactions;
+    }
+
+    // Override equals() and hashCode() in all composite key classes
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Bill)) return false;
+        Bill bill = (Bill) o;
+        return getBillID() == bill.getBillID();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getBillID());
     }
 }

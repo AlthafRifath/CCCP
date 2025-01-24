@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import java.util.Date;
 import java.util.List;
 @Entity
-@Table(name = "Role")
+@Table(name = "tblRole")
 public class Role {
 
     @Id
@@ -122,5 +122,21 @@ public class Role {
 
     public void setRolePermissions(List<RolePermission> rolePermissions) {
         this.rolePermissions = rolePermissions;
+    }
+
+    // Override equals() and hashCode() in all composite key classes
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Role role = (Role) o;
+
+        return roleID == role.roleID;
+    }
+
+    @Override
+    public int hashCode() {
+        return roleID;
     }
 }

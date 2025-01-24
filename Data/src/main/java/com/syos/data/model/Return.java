@@ -2,9 +2,10 @@ package main.java.com.syos.data.model;
 
 import jakarta.persistence.*;
 import java.util.Date;
+import java.util.Objects;
 
 @Entity
-@Table(name = "Return")
+@Table(name = "tblReturn")
 public class Return {
 
     @Id
@@ -160,5 +161,19 @@ public class Return {
 
     public void setUpdatedByUser(User updatedByUser) {
         this.updatedByUser = updatedByUser;
+    }
+
+    // Override equals() and hashCode() in all composite key classes
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Return)) return false;
+        Return aReturn = (Return) o;
+        return getReturnID() == aReturn.getReturnID() && getBillID() == aReturn.getBillID() && getQuantity() == aReturn.getQuantity() && isDeleted() == aReturn.isDeleted() && getItemCode().equals(aReturn.getItemCode()) && getBatchCode().equals(aReturn.getBatchCode()) && getReturnDate().equals(aReturn.getReturnDate()) && getReason().equals(aReturn.getReason()) && getUpdatedBy().equals(aReturn.getUpdatedBy()) && getUpdatedDateTime().equals(aReturn.getUpdatedDateTime()) && getBill().equals(aReturn.getBill()) && getItem().equals(aReturn.getItem()) && getUpdatedByUser().equals(aReturn.getUpdatedByUser());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getReturnID(), getBillID(), getItemCode(), getBatchCode(), getQuantity(), getReturnDate(), getReason(), isDeleted(), getUpdatedBy(), getUpdatedDateTime(), getBill(), getItem(), getUpdatedByUser());
     }
 }

@@ -3,8 +3,10 @@ package main.java.com.syos.data.model;
 import jakarta.persistence.*;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
+
 @Entity
-@Table(name = "Discount")
+@Table(name = "tblDiscount")
 public class Discount {
 
     @Id
@@ -156,5 +158,19 @@ public class Discount {
 
     public void setBillItems(List<BillItem> billItems) {
         this.billItems = billItems;
+    }
+
+    // Override equals() and hashCode() in all composite key classes
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Discount that = (Discount) o;
+        return discountID == that.discountID;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(discountID);
     }
 }
