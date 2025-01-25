@@ -2,7 +2,7 @@ package main.java.com.syos.service;
 
 public class AdminSession {
     private static AdminSession instance;
-    private String loggedInUser;
+    private Integer loggedInUserId;
 
     private AdminSession() {
         // Private constructor
@@ -15,15 +15,15 @@ public class AdminSession {
         return instance;
     }
 
-    public String getLoggedInUser() {
-        return loggedInUser;
+    public Integer getLoggedInUserId() {
+        return loggedInUserId;
     }
 
-    public void setLoggedInUser(String loggedInUser) {
-        this.loggedInUser = loggedInUser;
+    public void setLoggedInUserId(Integer loggedInUserId) {
+        this.loggedInUserId = loggedInUserId;
     }
 
     public void logout() {
-        loggedInUser = null;
+        loggedInUserId = null;
     }
 }

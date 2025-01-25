@@ -1,6 +1,8 @@
 package main.java.com.syos.data.model;
 
 import jakarta.persistence.*;
+
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -48,7 +50,7 @@ public class Item {
 
     @Column(name = "UpdatedDateTime", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    private Date updatedDateTime;
+    private LocalDateTime updatedDateTime;
 
     // Relationships
     @ManyToOne
@@ -159,11 +161,11 @@ public class Item {
         this.updatedBy = updatedBy;
     }
 
-    public Date getUpdatedDateTime() {
+    public LocalDateTime getUpdatedDateTime() {
         return updatedDateTime;
     }
 
-    public void setUpdatedDateTime(Date updatedDateTime) {
+    public void setUpdatedDateTime(LocalDateTime updatedDateTime) {
         this.updatedDateTime = updatedDateTime;
     }
 
@@ -224,7 +226,7 @@ public class Item {
         this.batchCode = batchCode;
     }
 
-    public Item(String itemCode, String batchCode, String itemName, double price, Date purchaseDate, Date expiryDate, int initialQuantity, int currentQuantity, boolean isActive, boolean isDeleted, Integer updatedBy, Date updatedDateTime) {
+    public Item(String itemCode, String batchCode, String itemName, double price, Date purchaseDate, Date expiryDate, int initialQuantity, int currentQuantity, boolean isActive, boolean isDeleted, Integer updatedBy, LocalDateTime updatedDateTime) {
         this.itemCode = itemCode;
         this.batchCode = batchCode;
         this.itemName = itemName;

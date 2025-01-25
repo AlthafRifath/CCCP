@@ -15,10 +15,10 @@ public class AuthenticationService implements IAuthenticationService {
 
     @Override
     public LoginDTO login(LoginRequest loginRequest) {
-        boolean isValid = adminDAO.validateCredentials(loginRequest.getUsername(), loginRequest.getPassword());
+        Integer adminId = adminDAO.getIdByUsernameAndPassword(loginRequest.getUsername(), loginRequest.getPassword());
 
-        if (isValid) {
-            AdminSession.getInstance().setLoggedInUser(loginRequest.getUsername());
+        if (adminId != null) {
+            AdminSession.getInstance().setLoggedInUserId(adminId);
             return new LoginDTO(true, "Login successful!");
         } else {
             return new LoginDTO(false, "Invalid username or password.");

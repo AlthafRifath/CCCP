@@ -3,8 +3,12 @@ package main.java.com.syos.service;
 import main.java.com.syos.data.dao.ItemDAO;
 import main.java.com.syos.data.dao.interfaces.IItemDAO;
 import main.java.com.syos.data.model.Item;
+import main.java.com.syos.request.InsertItemRequest;
 import main.java.com.syos.service.interfaces.IItemService;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 
 public class ItemService implements IItemService {
@@ -15,14 +19,31 @@ public class ItemService implements IItemService {
     }
 
     @Override
-    public void saveItem(Item item) {
-        if (item.getPrice() <= 0) {
-            throw new IllegalArgumentException("Item price must be greater than 0.");
+    public void InsertItem(InsertItemRequest request) {
+        if (request.getPrice() <= 0) {
+            throw new IllegalArgumentException("Price must be greater than 0");
+        }
+        if (request.getInitialQuantity() <= 0) {
+            throw new IllegalArgumentException("Initial quantity must be greater than 0");
+        }
+        Integer updatedBy = AdminSession.getInstance().getLoggedInUserId();
+        if (updatedBy == null) {
+            throw new IllegalStateException("User must be logged in to perform this operation");
         }
 
-        if (item.getInitialQuantity() < 0 || item.getCurrentQuantity() < 0) {
-            throw new IllegalArgumentException("Quantities cannot be negative.");
-        }
+        Item item = new Item();
+        item.setItemCode(request.getItemCode());
+        item.setBatchCode(request.getBatchCode());
+        item.setItemName(request.getItemName());
+        item.setPrice(request.getPrice());
+        item.setPurchaseDate(convertToDate(request.getPurchaseDate()));
+        item.setExpiryDate(convertToDate(request.getExpiryDate()));
+        item.setInitialQuantity(request.getInitialQuantity());
+        item.setCurrentQuantity(request.getCurrentQuantity());
+        item.setIsActive(true);
+        item.setIsDeleted(false);
+        item.setUpdatedDateTime(LocalDateTime.now());
+        item.setUpdatedBy(updatedBy);
 
         itemDAO.save(item);
     }
@@ -35,5 +56,9 @@ public class ItemService implements IItemService {
     @Override
     public List<Item> getAllItems() {
         return itemDAO.findAll();
+    }
+
+    private Date convertToDate(LocalDateTime localDateTime) {
+        return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
     }
 }

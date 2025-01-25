@@ -5,14 +5,13 @@ import main.java.com.syos.data.dao.interfaces.IAdminDAO;
 
 public class AdminDAO implements IAdminDAO {
     @Override
-    public boolean validateCredentials(String username, String password) {
+    public Integer getIdByUsernameAndPassword(String username, String password) {
         return TransactionManager.execute(session -> {
-            String hql = "SELECT COUNT(a) FROM User a WHERE a.username = :username AND a.passwordHash = :password";
-            Long count = session.createQuery(hql, Long.class)
+            String hql = "SELECT a.id FROM User a WHERE a.username = :username AND a.passwordHash = :password";
+            return session.createQuery(hql, Integer.class)
                     .setParameter("username", username)
                     .setParameter("password", password)
                     .uniqueResult();
-            return count != null && count > 0;
         });
     }
 }

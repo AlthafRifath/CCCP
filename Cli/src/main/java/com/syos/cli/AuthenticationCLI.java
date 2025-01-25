@@ -15,7 +15,7 @@ public class AuthenticationCLI {
         this.authenticationService = new AuthenticationService();
     }
 
-    public void start() {
+    public boolean start() {
         Scanner scanner = new Scanner(System.in);
 
         while (true) {
@@ -30,28 +30,10 @@ public class AuthenticationCLI {
 
             if (response.isSuccess()) {
                 System.out.println(response.getMessage());
-                postLoginMenu();
-                break;
+                return true;
             } else {
                 System.out.println(response.getMessage());
             }
-        }
-    }
-
-    private void postLoginMenu() {
-        System.out.println("Welcome, " + AdminSession.getInstance().getLoggedInUser());
-        System.out.println("1. Logout");
-        System.out.println("2. Exit");
-
-        Scanner scanner = new Scanner(System.in);
-        int choice = scanner.nextInt();
-
-        if (choice == 1) {
-            AdminSession.getInstance().logout();
-            System.out.println("Logged out successfully.");
-            start();
-        } else {
-            System.out.println("Exiting...");
         }
     }
 }
