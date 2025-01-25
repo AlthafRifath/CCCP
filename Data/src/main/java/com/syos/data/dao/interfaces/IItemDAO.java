@@ -9,5 +9,5 @@ public interface IItemDAO {
 
     void save(Item item);
     Optional<Item> findByItemCodeAndBatchCode(String itemCode, String batchCode);
-    List<Item> findAll();
+    void update(Item item);
 }

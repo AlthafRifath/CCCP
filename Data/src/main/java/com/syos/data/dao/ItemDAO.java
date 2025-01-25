@@ -32,9 +32,10 @@ public class ItemDAO implements IItemDAO {
     }
 
     @Override
-    public List<Item> findAll() {
-        return TransactionManager.execute(session ->
-                session.createQuery("from Item", Item.class).list()
-        );
+    public void update(Item item) {
+        TransactionManager.execute(session -> {
+            session.update(item);
+            return null;
+        });
     }
 }

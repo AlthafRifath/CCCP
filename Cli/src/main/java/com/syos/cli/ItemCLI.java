@@ -2,6 +2,7 @@ package main.java.com.syos.cli;
 
 import main.java.com.syos.data.model.Item;
 import main.java.com.syos.dto.GetItemDTO;
+import main.java.com.syos.request.UpdateItemRequest;
 import main.java.com.syos.service.ItemService;
 import main.java.com.syos.request.InsertItemRequest;
 
@@ -22,7 +23,7 @@ public class ItemCLI {
             System.out.println("\n=== Inventory Management ===");
             System.out.println("1. Add Item");
             System.out.println("2. View Item");
-            System.out.println("3. List All Items");
+            System.out.println("3. Update Item");
             System.out.println("4. Exit");
             System.out.print("Enter your choice: ");
 
@@ -38,7 +39,7 @@ public class ItemCLI {
             switch (choice) {
                 case 1 -> addItem(scanner);
                 case 2 -> getItemDetails();
-                case 3 -> listAllItems();
+                case 3 -> updateItem();
                 case 4 -> {
                     System.out.println("Exiting...");
                     return;
@@ -127,7 +128,34 @@ public class ItemCLI {
         System.out.println("CurrentQuantity: " + item.getCurrentQuantity());
     }
 
-    private void listAllItems() {
-        itemService.getAllItems().forEach(System.out::println);
+    public void updateItem() {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Enter ItemCode:");
+        String itemCode = scanner.nextLine();
+
+        System.out.println("Enter BatchCode:");
+        String batchCode = scanner.nextLine();
+
+        System.out.println("Enter new Price:");
+        double price = scanner.nextDouble();
+
+        System.out.println("Enter new InitialQuantity:");
+        int initialQuantity = scanner.nextInt();
+
+        System.out.println("Enter new CurrentQuantity:");
+        int currentQuantity = scanner.nextInt();
+
+        System.out.println("Enter Active Status (true/false):");
+        boolean isActive = scanner.nextBoolean();
+
+
+        UpdateItemRequest request = new UpdateItemRequest(itemCode, batchCode, price, initialQuantity, currentQuantity, isActive);
+
+        try {
+            itemService.updateItem(request);
+        } catch (IllegalArgumentException e) {
+            System.err.println(e.getMessage());
+        }
     }
 }

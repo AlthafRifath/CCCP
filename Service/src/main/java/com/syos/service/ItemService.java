@@ -6,6 +6,7 @@ import main.java.com.syos.data.dao.interfaces.IItemDAO;
 import main.java.com.syos.data.model.Item;
 import main.java.com.syos.dto.GetItemDTO;
 import main.java.com.syos.request.InsertItemRequest;
+import main.java.com.syos.request.UpdateItemRequest;
 import main.java.com.syos.service.interfaces.IItemService;
 
 import java.time.LocalDateTime;
@@ -68,7 +69,23 @@ public class ItemService implements IItemService {
     }
 
     @Override
-    public List<Item> getAllItems() {
-        return itemDAO.findAll();
+    public void updateItem(UpdateItemRequest request) {
+        Optional<Item> itemOptional = itemDAO.findByItemCodeAndBatchCode(request.getItemCode(), request.getBatchCode());
+
+        if (itemOptional.isEmpty()) {
+            throw new IllegalArgumentException("Item not found for ItemCode: " + request.getItemCode() +
+                    " and BatchCode: " + request.getBatchCode());
+        }
+
+        Item item = itemOptional.get();
+        item.setPrice(request.getPrice());
+        item.setInitialQuantity(request.getInitialQuantity());
+        item.setCurrentQuantity(request.getCurrentQuantity());
+        item.setIsActive(request.getIsActive());
+        item.setUpdatedBy(AdminSession.getInstance().getLoggedInUserId());
+        item.setUpdatedDateTime(LocalDateTime.now());
+
+        itemDAO.update(item);
+        System.out.println("Item updated successfully.");
     }
 }
