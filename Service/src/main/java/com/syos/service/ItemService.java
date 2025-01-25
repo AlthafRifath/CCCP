@@ -1,5 +1,6 @@
 package main.java.com.syos.service;
 
+import main.java.com.syos.data.builder.ItemBuilder;
 import main.java.com.syos.data.dao.ItemDAO;
 import main.java.com.syos.data.dao.interfaces.IItemDAO;
 import main.java.com.syos.data.model.Item;
@@ -31,20 +32,20 @@ public class ItemService implements IItemService {
             throw new IllegalStateException("User must be logged in to perform this operation");
         }
 
-        Item item = new Item();
-        item.setItemCode(request.getItemCode());
-        item.setBatchCode(request.getBatchCode());
-        item.setItemName(request.getItemName());
-        item.setPrice(request.getPrice());
-        item.setPurchaseDate(convertToDate(request.getPurchaseDate()));
-        item.setExpiryDate(convertToDate(request.getExpiryDate()));
-        item.setInitialQuantity(request.getInitialQuantity());
-        item.setCurrentQuantity(request.getCurrentQuantity());
-        item.setIsActive(true);
-        item.setIsDeleted(false);
-        item.setUpdatedDateTime(LocalDateTime.now());
-        item.setUpdatedBy(updatedBy);
-
+        Item item = new ItemBuilder()
+                .setItemCode(request.getItemCode())
+                .setBatchCode(request.getBatchCode())
+                .setItemName(request.getItemName())
+                .setPrice(request.getPrice())
+                .setPurchaseDate(request.getPurchaseDate())
+                .setExpiryDate(request.getExpiryDate())
+                .setInitialQuantity(request.getInitialQuantity())
+                .setCurrentQuantity(request.getCurrentQuantity())
+                .setIsActive(true)
+                .setIsDeleted(false)
+                .setUpdatedDateTime(LocalDateTime.now())
+                .setUpdatedBy(AdminSession.getInstance().getLoggedInUserId())
+                .build();
         itemDAO.save(item);
     }
 

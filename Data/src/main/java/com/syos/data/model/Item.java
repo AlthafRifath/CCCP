@@ -3,7 +3,6 @@ package main.java.com.syos.data.model;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -27,11 +26,11 @@ public class Item {
 
     @Column(name = "PurchaseDate", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    private Date purchaseDate;
+    private LocalDateTime purchaseDate;
 
     @Column(name = "ExpiryDate", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    private Date expiryDate;
+    private LocalDateTime expiryDate;
 
     @Column(name = "InitialQuantity", nullable = false)
     private int initialQuantity;
@@ -105,19 +104,19 @@ public class Item {
         this.price = price;
     }
 
-    public Date getPurchaseDate() {
+    public LocalDateTime getPurchaseDate() {
         return purchaseDate;
     }
 
-    public void setPurchaseDate(Date purchaseDate) {
+    public void setPurchaseDate(LocalDateTime purchaseDate) {
         this.purchaseDate = purchaseDate;
     }
 
-    public Date getExpiryDate() {
+    public LocalDateTime getExpiryDate() {
         return expiryDate;
     }
 
-    public void setExpiryDate(Date expiryDate) {
+    public void setExpiryDate(LocalDateTime expiryDate) {
         this.expiryDate = expiryDate;
     }
 
@@ -226,7 +225,7 @@ public class Item {
         this.batchCode = batchCode;
     }
 
-    public Item(String itemCode, String batchCode, String itemName, double price, Date purchaseDate, Date expiryDate, int initialQuantity, int currentQuantity, boolean isActive, boolean isDeleted, Integer updatedBy, LocalDateTime updatedDateTime) {
+    public Item(String itemCode, String batchCode, String itemName, double price, LocalDateTime purchaseDate, LocalDateTime expiryDate, int initialQuantity, int currentQuantity, boolean isActive, boolean isDeleted, Integer updatedBy, LocalDateTime updatedDateTime) {
         this.itemCode = itemCode;
         this.batchCode = batchCode;
         this.itemName = itemName;
