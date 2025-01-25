@@ -1,6 +1,7 @@
 package main.java.com.syos.cli;
 
 import main.java.com.syos.data.model.Item;
+import main.java.com.syos.dto.GetItemDTO;
 import main.java.com.syos.service.ItemService;
 import main.java.com.syos.request.InsertItemRequest;
 
@@ -36,7 +37,7 @@ public class ItemCLI {
 
             switch (choice) {
                 case 1 -> addItem(scanner);
-                case 2 -> viewItem(scanner);
+                case 2 -> getItemDetails();
                 case 3 -> listAllItems();
                 case 4 -> {
                     System.out.println("Exiting...");
@@ -97,18 +98,33 @@ public class ItemCLI {
         System.out.println("Item created successfully!");
     }
 
-    private void viewItem(Scanner scanner) {
-        System.out.print("Enter Item Code: ");
+    public void getItemDetails() {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Enter ItemCode:");
         String itemCode = scanner.nextLine();
-        System.out.print("Enter Batch Code: ");
+
+        System.out.println("Enter BatchCode:");
         String batchCode = scanner.nextLine();
 
-        Item item = itemService.getItem(itemCode, batchCode);
-        if (item != null) {
-            System.out.println(item);
-        } else {
-            System.out.println("Item not found.");
+        try {
+            GetItemDTO item = itemService.getItemByItemCodeAndBatchCode(itemCode, batchCode);
+            printItemDetails(item);
+        } catch (IllegalArgumentException e) {
+            System.err.println(e.getMessage());
         }
+    }
+
+    private void printItemDetails(GetItemDTO item) {
+        System.out.println("Item Details:");
+        System.out.println("ItemCode: " + item.getItemCode());
+        System.out.println("BatchCode: " + item.getBatchCode());
+        System.out.println("ItemName: " + item.getItemName());
+        System.out.println("Price: " + item.getPrice());
+        System.out.println("PurchaseDate: " + item.getPurchaseDate());
+        System.out.println("ExpiryDate: " + item.getExpiryDate());
+        System.out.println("InitialQuantity: " + item.getInitialQuantity());
+        System.out.println("CurrentQuantity: " + item.getCurrentQuantity());
     }
 
     private void listAllItems() {

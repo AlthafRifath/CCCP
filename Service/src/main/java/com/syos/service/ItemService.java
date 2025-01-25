@@ -4,13 +4,13 @@ import main.java.com.syos.data.builder.ItemBuilder;
 import main.java.com.syos.data.dao.ItemDAO;
 import main.java.com.syos.data.dao.interfaces.IItemDAO;
 import main.java.com.syos.data.model.Item;
+import main.java.com.syos.dto.GetItemDTO;
 import main.java.com.syos.request.InsertItemRequest;
 import main.java.com.syos.service.interfaces.IItemService;
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 public class ItemService implements IItemService {
     private final IItemDAO itemDAO;
@@ -50,16 +50,25 @@ public class ItemService implements IItemService {
     }
 
     @Override
-    public Item getItem(String itemCode, String batchCode) {
-        return itemDAO.findById(itemCode, batchCode);
+    public GetItemDTO getItemByItemCodeAndBatchCode(String itemCode, String batchCode) {
+        Optional<Item> itemOptional = itemDAO.findByItemCodeAndBatchCode(itemCode, batchCode);
+
+        if (itemOptional.isEmpty()) {
+            throw new IllegalArgumentException(
+                    "Item not found for ItemCode: " + itemCode + " and BatchCode: " + batchCode
+            );
+        }
+
+        Item item = itemOptional.get();
+        return new GetItemDTO(
+                item.getItemCode(), item.getBatchCode(), item.getItemName(), item.getPrice(),
+                item.getPurchaseDate(), item.getExpiryDate(), item.getInitialQuantity(),
+                item.getCurrentQuantity()
+        );
     }
 
     @Override
     public List<Item> getAllItems() {
         return itemDAO.findAll();
-    }
-
-    private Date convertToDate(LocalDateTime localDateTime) {
-        return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
     }
 }
