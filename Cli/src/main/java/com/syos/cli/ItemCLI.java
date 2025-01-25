@@ -2,6 +2,7 @@ package main.java.com.syos.cli;
 
 import main.java.com.syos.data.model.Item;
 import main.java.com.syos.dto.GetItemDTO;
+import main.java.com.syos.request.DeleteItemRequest;
 import main.java.com.syos.request.UpdateItemRequest;
 import main.java.com.syos.service.ItemService;
 import main.java.com.syos.request.InsertItemRequest;
@@ -24,7 +25,8 @@ public class ItemCLI {
             System.out.println("1. Add Item");
             System.out.println("2. View Item");
             System.out.println("3. Update Item");
-            System.out.println("4. Exit");
+            System.out.println("4. Delete Item");
+            System.out.println("5. Exit");
             System.out.print("Enter your choice: ");
 
             if (!scanner.hasNextInt()) {
@@ -40,7 +42,8 @@ public class ItemCLI {
                 case 1 -> addItem(scanner);
                 case 2 -> getItemDetails();
                 case 3 -> updateItem();
-                case 4 -> {
+                case 4 -> deleteItem();
+                case 5 -> {
                     System.out.println("Exiting...");
                     return;
                 }
@@ -154,6 +157,24 @@ public class ItemCLI {
 
         try {
             itemService.updateItem(request);
+        } catch (IllegalArgumentException e) {
+            System.err.println(e.getMessage());
+        }
+    }
+
+    public void deleteItem() {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Enter ItemCode:");
+        String itemCode = scanner.nextLine();
+
+        System.out.println("Enter BatchCode:");
+        String batchCode = scanner.nextLine();
+
+        DeleteItemRequest request = new DeleteItemRequest(itemCode, batchCode);
+
+        try {
+            itemService.deleteItem(request);
         } catch (IllegalArgumentException e) {
             System.err.println(e.getMessage());
         }

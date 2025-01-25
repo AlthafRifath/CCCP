@@ -2,9 +2,11 @@ package main.java.com.syos.service;
 
 import main.java.com.syos.data.builder.ItemBuilder;
 import main.java.com.syos.data.dao.ItemDAO;
+import main.java.com.syos.data.dao.SoftDeleteItemDAO;
 import main.java.com.syos.data.dao.interfaces.IItemDAO;
 import main.java.com.syos.data.model.Item;
 import main.java.com.syos.dto.GetItemDTO;
+import main.java.com.syos.request.DeleteItemRequest;
 import main.java.com.syos.request.InsertItemRequest;
 import main.java.com.syos.request.UpdateItemRequest;
 import main.java.com.syos.service.interfaces.IItemService;
@@ -17,7 +19,7 @@ public class ItemService implements IItemService {
     private final IItemDAO itemDAO;
 
     public ItemService() {
-        this.itemDAO = new ItemDAO();
+        this.itemDAO = new SoftDeleteItemDAO(new ItemDAO());
     }
 
     @Override
@@ -87,5 +89,11 @@ public class ItemService implements IItemService {
 
         itemDAO.update(item);
         System.out.println("Item updated successfully.");
+    }
+
+    @Override
+    public void deleteItem(DeleteItemRequest request) {
+        SoftDeleteItemDAO softDeleteDAO = (SoftDeleteItemDAO) itemDAO;
+        softDeleteDAO.softDelete(request.getItemCode(), request.getBatchCode());
     }
 }
