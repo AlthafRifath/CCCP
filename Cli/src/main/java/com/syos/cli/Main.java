@@ -8,8 +8,10 @@ public class Main {
 
         if (isAuthenticated) {
             System.out.println("Welcome to the Inventory Management System!");
-            ItemCLI itemCLI = new ItemCLI();
-            itemCLI.start();
+//            ItemCLI itemCLI = new ItemCLI();
+//            itemCLI.start();
+            MainStoreStockCLI mainStoreStockCLI = new MainStoreStockCLI();
+            mainStoreStockCLI.start();
         } else {
             System.out.println("Exiting the application. Please try logging in again.");
         }
