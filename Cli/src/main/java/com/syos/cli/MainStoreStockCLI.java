@@ -1,6 +1,7 @@
 package main.java.com.syos.cli;
 
 import main.java.com.syos.dto.GetMainStoreStockDetailsDTO;
+import main.java.com.syos.request.DeleteMainStoreStockItemRequest;
 import main.java.com.syos.request.InsertMainStoreStockRequest;
 import main.java.com.syos.service.MainStoreStockService;
 import main.java.com.syos.service.interfaces.IMainStoreStockService;
@@ -41,7 +42,7 @@ public class MainStoreStockCLI {
                 case 1 -> insertMainStoreStock();
                 case 2 -> viewMainStoreStockDetails();
 //                case 3 -> updateItem();
-//                case 4 -> deleteItem();
+                case 4 -> deleteMainStoreStock();
                 case 5 -> {
                     System.out.println("Exiting...");
                     return;
@@ -104,6 +105,27 @@ public class MainStoreStockCLI {
             System.out.println(stockDetails.get());
         } else {
             System.out.println("No stock found for the provided Store ID, Item Code, and Batch Code.");
+        }
+    }
+
+    public void deleteMainStoreStock() {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Enter Store ID:");
+        int storeId = scanner.nextInt();
+        scanner.nextLine(); // Consume newline
+
+        System.out.println("Enter Item Code:");
+        String itemCode = scanner.nextLine();
+
+        System.out.println("Enter Batch Code:");
+        String batchCode = scanner.nextLine();
+
+        try {
+            DeleteMainStoreStockItemRequest request = new DeleteMainStoreStockItemRequest(storeId, itemCode, batchCode);
+            mainStoreStockService.deleteMainStoreStockItem(request);
+        } catch (Exception e) {
+            System.err.println("Error: " + e.getMessage());
         }
     }
 }

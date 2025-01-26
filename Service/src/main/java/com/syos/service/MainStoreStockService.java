@@ -1,12 +1,15 @@
 package main.java.com.syos.service;
 
+import com.syos.util.TransactionManager;
 import main.java.com.syos.data.builder.MainStoreStockBuilder;
 import main.java.com.syos.data.dao.ItemDAO;
 import main.java.com.syos.data.dao.MainStoreStockDAO;
+import main.java.com.syos.data.dao.SoftDeleteMainStoreStockDAO;
 import main.java.com.syos.data.dao.interfaces.IMainStoreStockDAO;
 import main.java.com.syos.data.model.Item;
 import main.java.com.syos.data.model.MainStoreStock;
 import main.java.com.syos.dto.GetMainStoreStockDetailsDTO;
+import main.java.com.syos.request.DeleteMainStoreStockItemRequest;
 import main.java.com.syos.request.InsertMainStoreStockRequest;
 import main.java.com.syos.service.interfaces.IMainStoreStockService;
 
@@ -18,7 +21,7 @@ public class MainStoreStockService implements IMainStoreStockService {
     private final ItemDAO itemDAO;
 
     public MainStoreStockService() {
-        this.mainStoreStockDAO = new MainStoreStockDAO();
+        this.mainStoreStockDAO = new SoftDeleteMainStoreStockDAO(new MainStoreStockDAO());
         this.itemDAO = new ItemDAO();
     }
 
@@ -77,6 +80,39 @@ public class MainStoreStockService implements IMainStoreStockService {
 
     @Override
     public Optional<GetMainStoreStockDetailsDTO> getMainStoreStockDetails(int storeId, String itemCode, String batchCode) {
-        return mainStoreStockDAO.findByStoreIdAndItemCodeAndBatchCode(storeId, itemCode, batchCode);
+        Optional<MainStoreStock> stockOptional = mainStoreStockDAO.findByStoreIdAndItemCodeAndBatchCode(storeId, itemCode, batchCode);
+
+        return stockOptional.map(stock -> new GetMainStoreStockDetailsDTO(
+                stock.getStoreID(),
+                stock.getItemCode(),
+                stock.getBatchCode(),
+                stock.getInitialStock(),
+                stock.getCurrentStock(),
+                stock.getLastRestockedDate()
+        ));
+    }
+
+    @Override
+    public void deleteMainStoreStockItem(DeleteMainStoreStockItemRequest request) {
+        Optional<MainStoreStock> stockOptional = mainStoreStockDAO.findByStoreIdAndItemCodeAndBatchCode(
+                request.getStoreId(),
+                request.getItemCode(),
+                request.getBatchCode()
+        );
+
+        // Check if stock exists
+        if (stockOptional.isEmpty()) {
+            throw new IllegalArgumentException("Stock not found for the provided StoreId, ItemCode, and BatchCode.");
+        }
+
+        MainStoreStock stock = stockOptional.get();
+
+        // Ensure currentStock is 0 before deleting
+        if (stock.getCurrentStock() != 0) {
+            throw new IllegalStateException("Cannot delete stock. Current stock must be 0.");
+        }
+
+        mainStoreStockDAO.softDelete(stock);
+        System.out.println("Stock marked as deleted successfully.");
     }
 }
