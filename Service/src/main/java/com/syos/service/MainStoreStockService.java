@@ -1,19 +1,24 @@
 package main.java.com.syos.service;
 
 import main.java.com.syos.data.builder.MainStoreStockBuilder;
+import main.java.com.syos.data.dao.ItemDAO;
 import main.java.com.syos.data.dao.MainStoreStockDAO;
 import main.java.com.syos.data.dao.interfaces.IMainStoreStockDAO;
+import main.java.com.syos.data.model.Item;
 import main.java.com.syos.data.model.MainStoreStock;
 import main.java.com.syos.request.InsertMainStoreStockRequest;
 import main.java.com.syos.service.interfaces.IMainStoreStockService;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 public class MainStoreStockService implements IMainStoreStockService {
     private final IMainStoreStockDAO mainStoreStockDAO;
+    private final ItemDAO itemDAO;
 
     public MainStoreStockService() {
         this.mainStoreStockDAO = new MainStoreStockDAO();
+        this.itemDAO = new ItemDAO();
     }
 
     @Override
@@ -47,5 +52,24 @@ public class MainStoreStockService implements IMainStoreStockService {
                 .build();
 
         mainStoreStockDAO.save(mainStoreStock);
+
+        Optional<Item> itemOptional = itemDAO.findByItemCodeAndBatchCode(request.getItemCode(), request.getBatchCode());
+
+        if (itemOptional.isPresent()) {
+            Item item = itemOptional.get();
+
+            if (item.getCurrentQuantity() >= request.getInitialStock()) {
+                item.setCurrentQuantity(item.getCurrentQuantity() - request.getInitialStock());
+                item.setUpdatedDateTime(LocalDateTime.now());
+                item.setUpdatedBy(AdminSession.getInstance().getLoggedInUserId());
+                itemDAO.update(item);
+                System.out.println("Item stock updated successfully.");
+            } else {
+                throw new IllegalStateException("Insufficient stock in Item table to add to MainStoreStock.");
+            }
+        } else {
+            throw new IllegalArgumentException("Item not found with ItemCode: " + request.getItemCode() +
+                    " and BatchCode: " + request.getBatchCode());
+        }
     }
 }
