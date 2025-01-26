@@ -10,8 +10,10 @@ public class Main {
             System.out.println("Welcome to the Inventory Management System!");
 //            ItemCLI itemCLI = new ItemCLI();
 //            itemCLI.start();
-            MainStoreStockCLI mainStoreStockCLI = new MainStoreStockCLI();
-            mainStoreStockCLI.start();
+//            MainStoreStockCLI mainStoreStockCLI = new MainStoreStockCLI();
+//            mainStoreStockCLI.start();
+            ShelfCLI shelfCLI = new ShelfCLI();
+            shelfCLI.start();
         } else {
             System.out.println("Exiting the application. Please try logging in again.");
         }

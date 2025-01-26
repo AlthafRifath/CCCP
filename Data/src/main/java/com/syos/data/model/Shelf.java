@@ -1,7 +1,8 @@
 package main.java.com.syos.data.model;
 
 import jakarta.persistence.*;
-import java.util.Date;
+//import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
@@ -24,7 +25,7 @@ public class Shelf {
 
     @Column(name = "LastRestockedDate", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    private Date lastRestockedDate;
+    private LocalDateTime lastRestockedDate;
 
     @Column(name = "IsDeleted", nullable = false)
     private boolean isDeleted;
@@ -34,7 +35,7 @@ public class Shelf {
 
     @Column(name = "UpdatedDateTime", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    private Date updatedDateTime;
+    private LocalDateTime updatedDateTime;
 
     // Relationships
     @ManyToOne
@@ -81,11 +82,11 @@ public class Shelf {
         this.quantityOnShelf = quantityOnShelf;
     }
 
-    public Date getLastRestockedDate() {
+    public LocalDateTime getLastRestockedDate() {
         return lastRestockedDate;
     }
 
-    public void setLastRestockedDate(Date lastRestockedDate) {
+    public void setLastRestockedDate(LocalDateTime lastRestockedDate) {
         this.lastRestockedDate = lastRestockedDate;
     }
 
@@ -105,11 +106,11 @@ public class Shelf {
         this.updatedBy = updatedBy;
     }
 
-    public Date getUpdatedDateTime() {
+    public LocalDateTime getUpdatedDateTime() {
         return updatedDateTime;
     }
 
-    public void setUpdatedDateTime(Date updatedDateTime) {
+    public void setUpdatedDateTime(LocalDateTime updatedDateTime) {
         this.updatedDateTime = updatedDateTime;
     }
 
