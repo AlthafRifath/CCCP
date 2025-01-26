@@ -6,6 +6,7 @@ import main.java.com.syos.data.dao.MainStoreStockDAO;
 import main.java.com.syos.data.dao.interfaces.IMainStoreStockDAO;
 import main.java.com.syos.data.model.Item;
 import main.java.com.syos.data.model.MainStoreStock;
+import main.java.com.syos.dto.GetMainStoreStockDetailsDTO;
 import main.java.com.syos.request.InsertMainStoreStockRequest;
 import main.java.com.syos.service.interfaces.IMainStoreStockService;
 
@@ -53,6 +54,7 @@ public class MainStoreStockService implements IMainStoreStockService {
 
         mainStoreStockDAO.save(mainStoreStock);
 
+        // Update Item table with the new stock quantity after adding to MainStoreStock.
         Optional<Item> itemOptional = itemDAO.findByItemCodeAndBatchCode(request.getItemCode(), request.getBatchCode());
 
         if (itemOptional.isPresent()) {
@@ -71,5 +73,10 @@ public class MainStoreStockService implements IMainStoreStockService {
             throw new IllegalArgumentException("Item not found with ItemCode: " + request.getItemCode() +
                     " and BatchCode: " + request.getBatchCode());
         }
+    }
+
+    @Override
+    public Optional<GetMainStoreStockDetailsDTO> getMainStoreStockDetails(int storeId, String itemCode, String batchCode) {
+        return mainStoreStockDAO.findByStoreIdAndItemCodeAndBatchCode(storeId, itemCode, batchCode);
     }
 }

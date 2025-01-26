@@ -1,10 +1,12 @@
 package main.java.com.syos.cli;
 
+import main.java.com.syos.dto.GetMainStoreStockDetailsDTO;
 import main.java.com.syos.request.InsertMainStoreStockRequest;
 import main.java.com.syos.service.MainStoreStockService;
 import main.java.com.syos.service.interfaces.IMainStoreStockService;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.Scanner;
 
 public class MainStoreStockCLI {
@@ -20,7 +22,7 @@ public class MainStoreStockCLI {
         while (true) {
             System.out.println("\n=== Inventory Management ===");
             System.out.println("1. Add Main Store Stock");
-            System.out.println("2. View Main Store Stock Items");
+            System.out.println("2. View Main Store Stock Item");
             System.out.println("3. Update Item");
             System.out.println("4. Delete Item");
             System.out.println("5. Exit");
@@ -37,7 +39,7 @@ public class MainStoreStockCLI {
 
             switch (choice) {
                 case 1 -> insertMainStoreStock();
-//                case 2 -> getItemDetails();
+                case 2 -> viewMainStoreStockDetails();
 //                case 3 -> updateItem();
 //                case 4 -> deleteItem();
                 case 5 -> {
@@ -80,5 +82,28 @@ public class MainStoreStockCLI {
 
         mainStoreStockService.insertMainStoreStock(request);
         System.out.println("Main Store Stock created successfully!");
+    }
+
+    public void viewMainStoreStockDetails() {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Enter Store ID:");
+        int storeId = scanner.nextInt();
+        scanner.nextLine(); // Consume newline
+
+        System.out.println("Enter Item Code:");
+        String itemCode = scanner.nextLine();
+
+        System.out.println("Enter Batch Code:");
+        String batchCode = scanner.nextLine();
+
+        Optional<GetMainStoreStockDetailsDTO> stockDetails = mainStoreStockService.getMainStoreStockDetails(storeId, itemCode, batchCode);
+
+        if (stockDetails.isPresent()) {
+            System.out.println("Stock Details:");
+            System.out.println(stockDetails.get());
+        } else {
+            System.out.println("No stock found for the provided Store ID, Item Code, and Batch Code.");
+        }
     }
 }
