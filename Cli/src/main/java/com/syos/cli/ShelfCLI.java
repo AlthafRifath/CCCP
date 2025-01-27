@@ -1,10 +1,12 @@
 package main.java.com.syos.cli;
 
+import main.java.com.syos.dto.GetShelfDetailsDTO;
 import main.java.com.syos.request.InsertShelfRequest;
 import main.java.com.syos.service.ShelfService;
 import main.java.com.syos.service.interfaces.IShelfService;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Scanner;
 
 public class ShelfCLI {
@@ -37,7 +39,7 @@ public class ShelfCLI {
 
             switch (choice) {
                 case 1 -> handleAddShelf();
-//                case 2 -> viewMainStoreStockDetails();
+                case 2 -> handleViewShelfByShelfId();
 //                case 3 -> updateItem();
 //                case 4 -> deleteMainStoreStock();
                 case 5 -> {
@@ -52,6 +54,12 @@ public class ShelfCLI {
     private void handleAddShelf() {
         Scanner scanner = new Scanner(System.in);
 
+        System.out.println("Enter StoreID for MainStoreStock:");
+        int storeIdFromMainStoreStock = scanner.nextInt();
+
+        System.out.println("Enter StoreID for the Shelf:");
+        int storeIdFromStore = scanner.nextInt();
+
         System.out.println("Enter ShelfID:");
         int shelfId = scanner.nextInt();
 
@@ -65,12 +73,35 @@ public class ShelfCLI {
         int quantityOnShelf = scanner.nextInt();
 
         InsertShelfRequest request = new InsertShelfRequest();
+        request.setStoreIdFromMainStoreStock(storeIdFromMainStoreStock); // For validation
+        request.setStoreIdFromStore(storeIdFromStore); // For association
         request.setShelfId(shelfId);
         request.setItemCode(itemCode);
         request.setBatchCode(batchCode);
         request.setQuantityOnShelf(quantityOnShelf);
-        request.setLastRestockedDate(LocalDateTime.now());
 
         shelfService.addShelf(request);
+    }
+
+    private void handleViewShelfByShelfId() {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Enter ShelfID:");
+        int shelfId = scanner.nextInt();
+
+        List<GetShelfDetailsDTO> shelves = shelfService.getShelfDetailsByShelfId(shelfId);
+        if (shelves.isEmpty()) {
+            System.out.println("No shelves found for ShelfID: " + shelfId);
+        } else {
+            System.out.println("Shelf Details for ShelfID: " + shelfId);
+            for (GetShelfDetailsDTO shelf : shelves) {
+                System.out.println("- StoreID: " + shelf.getStoreId());
+                System.out.println("  ItemCode: " + shelf.getItemCode());
+                System.out.println("  BatchCode: " + shelf.getBatchCode());
+                System.out.println("  Quantity On Shelf: " + shelf.getQuantityOnShelf());
+                System.out.println("  Last Restocked Date: " + shelf.getLastRestockedDate());
+                System.out.println("-----------------------------");
+            }
+        }
     }
 }

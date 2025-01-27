@@ -1,7 +1,6 @@
 package main.java.com.syos.data.model;
 
 import jakarta.persistence.*;
-//import java.util.Date;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -48,6 +47,10 @@ public class Shelf {
     @ManyToOne
     @JoinColumn(name = "UpdatedBy", insertable = false, updatable = false)
     private User updatedByUser;
+
+    @ManyToOne
+    @JoinColumn(name = "StoreID", referencedColumnName = "StoreID", nullable = false)
+    private Store store;
 
     // Getters and Setters
     public int getShelfID() {
@@ -128,6 +131,14 @@ public class Shelf {
 
     public void setUpdatedByUser(User updatedByUser) {
         this.updatedByUser = updatedByUser;
+    }
+
+    public Store getStore() {
+        return store;
+    }
+
+    public void setStore(Store store) {
+        this.store = store;
     }
 
     // Override equals() and hashCode() in all composite key classes

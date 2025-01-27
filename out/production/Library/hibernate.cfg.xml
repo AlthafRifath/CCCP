@@ -12,8 +12,8 @@
 
     <!-- Hibernate properties -->
     <property name="hibernate.transaction.coordinator_class">jdbc</property>
-    <property name="hibernate.show_sql">false</property>
-    <property name="hibernate.format_sql">false</property>
+    <property name="hibernate.show_sql">true</property>
+    <property name="hibernate.format_sql">true</property>
     <property name="hibernate.hbm2ddl.auto">validate</property>
     <property name="hibernate.cache.use_second_level_cache">false</property>
     <property name="hibernate.transaction.jta.platform">org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform</property>
@@ -36,5 +36,6 @@
     <mapping class="main.java.com.syos.data.model.RolePermission" />
     <mapping class="main.java.com.syos.data.model.UserRole" />
     <mapping class="main.java.com.syos.data.model.UserLogs" />
+    <mapping class="main.java.com.syos.data.model.Store" />
   </session-factory>
 </hibernate-configuration>

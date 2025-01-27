@@ -36,5 +36,6 @@
     <mapping class="main.java.com.syos.data.model.RolePermission" />
     <mapping class="main.java.com.syos.data.model.UserRole" />
     <mapping class="main.java.com.syos.data.model.UserLogs" />
+    <mapping class="main.java.com.syos.data.model.Store" />
   </session-factory>
 </hibernate-configuration>

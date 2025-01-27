@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 
 public class InsertShelfRequest {
     private int shelfId;
+    private int storeIdFromMainStoreStock;
+    private int storeIdFromStore;
     private String itemCode;
     private String batchCode;
     private int quantityOnShelf;
@@ -16,6 +18,22 @@ public class InsertShelfRequest {
 
     public void setShelfId(int shelfId) {
         this.shelfId = shelfId;
+    }
+
+    public int getStoreIdFromMainStoreStock() {
+        return storeIdFromMainStoreStock;
+    }
+
+    public void setStoreIdFromMainStoreStock(int storeIdFromMainStoreStock) {
+        this.storeIdFromMainStoreStock = storeIdFromMainStoreStock;
+    }
+
+    public int getStoreIdFromStore() {
+        return storeIdFromStore;
+    }
+
+    public void setStoreIdFromStore(int storeIdFromStore) {
+        this.storeIdFromStore = storeIdFromStore;
     }
 
     public String getItemCode() {
