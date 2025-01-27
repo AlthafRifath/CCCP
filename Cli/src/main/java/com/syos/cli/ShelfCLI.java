@@ -1,7 +1,9 @@
 package main.java.com.syos.cli;
 
 import main.java.com.syos.dto.GetShelfDetailsDTO;
+import main.java.com.syos.request.DeleteShelfRequest;
 import main.java.com.syos.request.InsertShelfRequest;
+import main.java.com.syos.request.UpdateShelfRequest;
 import main.java.com.syos.service.ShelfService;
 import main.java.com.syos.service.interfaces.IShelfService;
 
@@ -40,8 +42,8 @@ public class ShelfCLI {
             switch (choice) {
                 case 1 -> handleAddShelf();
                 case 2 -> handleViewShelfByShelfIdAndStoreId();
-//                case 3 -> updateItem();
-//                case 4 -> deleteMainStoreStock();
+                case 3 -> handleUpdateShelf();
+                case 4 -> handleDeleteShelf();
                 case 5 -> {
                     System.out.println("Exiting...");
                     return;
@@ -73,8 +75,8 @@ public class ShelfCLI {
         int quantityOnShelf = scanner.nextInt();
 
         InsertShelfRequest request = new InsertShelfRequest();
-        request.setStoreIdFromMainStoreStock(storeIdFromMainStoreStock); // For validation
-        request.setStoreIdFromStore(storeIdFromStore); // For association
+        request.setStoreIdFromMainStoreStock(storeIdFromMainStoreStock);
+        request.setStoreIdFromStore(storeIdFromStore);
         request.setShelfId(shelfId);
         request.setItemCode(itemCode);
         request.setBatchCode(batchCode);
@@ -107,6 +109,62 @@ public class ShelfCLI {
                 System.out.println("-----------------------------");
             }
         }
+    }
+
+    private void handleUpdateShelf() {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Enter StoreID for Shelf:");
+        int shelfStoreId = scanner.nextInt();
+
+        System.out.println("Enter ShelfID:");
+        int shelfId = scanner.nextInt();
+
+        System.out.println("Enter ItemCode:");
+        String itemCode = scanner.next();
+
+        System.out.println("Enter BatchCode:");
+        String batchCode = scanner.next();
+
+        System.out.println("Enter StoreID for MainStoreStock:");
+        int mainStoreStockStoreId = scanner.nextInt();
+
+        System.out.println("Enter Quantity to Add to Shelf:");
+        int quantityToAdd = scanner.nextInt();
+
+        UpdateShelfRequest request = new UpdateShelfRequest();
+        request.setStoreId(shelfStoreId);
+        request.setShelfId(shelfId);
+        request.setItemCode(itemCode);
+        request.setBatchCode(batchCode);
+        request.setStoreIdFromMainStoreStock(mainStoreStockStoreId);
+        request.setQuantityToAdd(quantityToAdd);
+
+        shelfService.updateShelf(request);
+    }
+
+    private void handleDeleteShelf() {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Enter StoreID:");
+        int storeId = scanner.nextInt();
+
+        System.out.println("Enter ShelfID:");
+        int shelfId = scanner.nextInt();
+
+        System.out.println("Enter ItemCode:");
+        String itemCode = scanner.next();
+
+        System.out.println("Enter BatchCode:");
+        String batchCode = scanner.next();
+
+        DeleteShelfRequest request = new DeleteShelfRequest();
+        request.setStoreId(storeId);
+        request.setShelfId(shelfId);
+        request.setItemCode(itemCode);
+        request.setBatchCode(batchCode);
+
+        shelfService.deleteShelf(request);
     }
 
 }
