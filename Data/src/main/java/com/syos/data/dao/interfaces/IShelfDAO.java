@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface IShelfDAO {
     void save(Shelf shelf);
-    List<Shelf> findByShelfId(int shelfId);
+    List<Shelf> findByShelfIdAndStoreId(int shelfId, int storeId);
 }

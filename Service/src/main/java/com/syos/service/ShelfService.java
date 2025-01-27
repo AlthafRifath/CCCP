@@ -88,8 +88,9 @@ public class ShelfService implements IShelfService {
     }
 
     @Override
-    public List<GetShelfDetailsDTO> getShelfDetailsByShelfId(int shelfId) {
-        List<Shelf> shelves = shelfDAO.findByShelfId(shelfId);
+    public List<GetShelfDetailsDTO> getShelfDetailsByShelfIdAndStoreId(int shelfId, int storeId) {
+        List<Shelf> shelves = shelfDAO.findByShelfIdAndStoreId(shelfId, storeId);
+
         return shelves.stream()
                 .map(shelf -> new GetShelfDetailsDTO(
                         shelf.getShelfID(),
@@ -97,7 +98,8 @@ public class ShelfService implements IShelfService {
                         shelf.getItemCode(),
                         shelf.getBatchCode(),
                         shelf.getQuantityOnShelf(),
-                        shelf.getLastRestockedDate()
+                        shelf.getLastRestockedDate(),
+                        shelf.getItem().getItemName()
                 ))
                 .collect(Collectors.toList());
     }

@@ -39,7 +39,7 @@ public class ShelfCLI {
 
             switch (choice) {
                 case 1 -> handleAddShelf();
-                case 2 -> handleViewShelfByShelfId();
+                case 2 -> handleViewShelfByShelfIdAndStoreId();
 //                case 3 -> updateItem();
 //                case 4 -> deleteMainStoreStock();
                 case 5 -> {
@@ -83,19 +83,23 @@ public class ShelfCLI {
         shelfService.addShelf(request);
     }
 
-    private void handleViewShelfByShelfId() {
+    private void handleViewShelfByShelfIdAndStoreId() {
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("Enter ShelfID:");
         int shelfId = scanner.nextInt();
 
-        List<GetShelfDetailsDTO> shelves = shelfService.getShelfDetailsByShelfId(shelfId);
+        System.out.println("Enter StoreID:");
+        int storeId = scanner.nextInt();
+
+        List<GetShelfDetailsDTO> shelves = shelfService.getShelfDetailsByShelfIdAndStoreId(shelfId, storeId);
         if (shelves.isEmpty()) {
-            System.out.println("No shelves found for ShelfID: " + shelfId);
+            System.out.println("No shelves found for ShelfID: " + shelfId + " and StoreID: " + storeId);
         } else {
-            System.out.println("Shelf Details for ShelfID: " + shelfId);
+            System.out.println("Shelf Details for ShelfID: " + shelfId + " and StoreID: " + storeId);
             for (GetShelfDetailsDTO shelf : shelves) {
-                System.out.println("- StoreID: " + shelf.getStoreId());
+                System.out.println("StoreID: " + storeId);
+                System.out.println("  ItemName: " + shelf.getItemName());
                 System.out.println("  ItemCode: " + shelf.getItemCode());
                 System.out.println("  BatchCode: " + shelf.getBatchCode());
                 System.out.println("  Quantity On Shelf: " + shelf.getQuantityOnShelf());
@@ -104,4 +108,5 @@ public class ShelfCLI {
             }
         }
     }
+
 }

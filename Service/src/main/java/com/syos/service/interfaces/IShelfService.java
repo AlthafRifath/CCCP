@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface IShelfService {
     void addShelf(InsertShelfRequest request);
-    List<GetShelfDetailsDTO> getShelfDetailsByShelfId(int shelfId);
+    List<GetShelfDetailsDTO> getShelfDetailsByShelfIdAndStoreId(int shelfId, int storeId);
 }
