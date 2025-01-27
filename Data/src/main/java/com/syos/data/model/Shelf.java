@@ -9,13 +9,18 @@ import java.util.Objects;
 public class Shelf {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ShelfID")
+    @Column(name = "StoreID", nullable = false)
+    private int storeID;
+
+    @Id
+    @Column(name = "ShelfID", nullable = false)
     private int shelfID;
 
+    @Id
     @Column(name = "ItemCode", nullable = false)
     private String itemCode;
 
+    @Id
     @Column(name = "BatchCode", nullable = false)
     private String batchCode;
 
@@ -49,10 +54,18 @@ public class Shelf {
     private User updatedByUser;
 
     @ManyToOne
-    @JoinColumn(name = "StoreID", referencedColumnName = "StoreID", nullable = false)
+    @JoinColumn(name = "StoreID", referencedColumnName = "StoreID", insertable = false, updatable = false)
     private Store store;
 
     // Getters and Setters
+    public int getStoreID() {
+        return storeID;
+    }
+
+    public void setStoreID(int storeID) {
+        this.storeID = storeID;
+    }
+
     public int getShelfID() {
         return shelfID;
     }
@@ -147,11 +160,14 @@ public class Shelf {
         if (this == o) return true;
         if (!(o instanceof Shelf)) return false;
         Shelf shelf = (Shelf) o;
-        return getShelfID() == shelf.getShelfID();
+        return getStoreID() == shelf.getStoreID() &&
+                getShelfID() == shelf.getShelfID() &&
+                Objects.equals(getItemCode(), shelf.getItemCode()) &&
+                Objects.equals(getBatchCode(), shelf.getBatchCode());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getShelfID());
+        return Objects.hash(getStoreID(), getShelfID(), getItemCode(), getBatchCode());
     }
 }

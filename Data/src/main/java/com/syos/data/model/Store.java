@@ -9,7 +9,6 @@ import java.util.Objects;
 public class Store {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "StoreID")
     private int storeID;
 

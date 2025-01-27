@@ -74,6 +74,7 @@ public class ShelfService implements IShelfService {
         Shelf shelf = new Shelf();
         shelf.setShelfID(request.getShelfId());
         shelf.setStore(store); // Associated StoreID from tblStore
+        shelf.setStoreID(store.getStoreID()); // Explicitly set StoreID for tblShelf
         shelf.setItemCode(request.getItemCode());
         shelf.setBatchCode(request.getBatchCode());
         shelf.setQuantityOnShelf(request.getQuantityOnShelf());

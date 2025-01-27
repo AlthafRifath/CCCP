@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 
 public class InsertShelfRequest {
     private int shelfId;
-    private int storeIdFromMainStoreStock;
+    private int storeIdFromMainStoreStock; // for validation in tblMainStoreStock
     private int storeIdFromStore;
     private String itemCode;
     private String batchCode;
