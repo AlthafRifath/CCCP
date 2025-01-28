@@ -2,7 +2,9 @@ package main.java.com.syos.cli;
 
 import main.java.com.syos.request.BillItemRequest;
 import main.java.com.syos.request.CreateBillRequest;
+import main.java.com.syos.service.BillItemService;
 import main.java.com.syos.service.BillService;
+import main.java.com.syos.service.interfaces.IBillItemService;
 import main.java.com.syos.service.interfaces.IBillService;
 
 import java.math.BigDecimal;
@@ -12,9 +14,11 @@ import java.util.Scanner;
 
 public class BillCLI {
     private final IBillService billService;
+    private final IBillItemService billItemService;
 
     public BillCLI() {
         this.billService = new BillService();
+        this.billItemService = new BillItemService();
     }
 
     public void start() {
@@ -88,11 +92,10 @@ public class BillCLI {
             String itemDiscountInput = scanner.nextLine();
             Integer itemDiscountId = itemDiscountInput.isEmpty() ? null : Integer.parseInt(itemDiscountInput);
 
-            BigDecimal totalItemPrice = pricePerItem.multiply(BigDecimal.valueOf(quantity));
-            totalBillAmount = totalBillAmount.add(totalItemPrice);
+            BillItemRequest billItem = new BillItemRequest(itemCode, batchCode, quantity, pricePerItem, itemDiscountId);
+            billItems.add(billItem);
 
-            // Add BillItemRequest with totalItemPrice
-            billItems.add(new BillItemRequest(itemCode, batchCode, quantity, pricePerItem, totalItemPrice, itemDiscountId));
+            totalBillAmount = totalBillAmount.add(billItem.getTotalItemPrice());
 
             System.out.print("Do you want to add another item? (yes/no): ");
             String choice = scanner.nextLine();
@@ -101,11 +104,21 @@ public class BillCLI {
 
         billRequest.setBillItems(billItems);
 
-        // Display total amount before cash tendered
+        // Display bill summary BEFORE asking for cash
         System.out.println("\n=== Bill Summary ===");
+        System.out.println("Customer ID: " + (billRequest.getCustomerID() == null ? "Walk-in Customer" : billRequest.getCustomerID()));
+        System.out.println("Discount ID: " + (billRequest.getDiscountID() == null ? "No Discount" : billRequest.getDiscountID()));
         System.out.println("Total Bill Amount: " + totalBillAmount);
+        System.out.println("\n--- Bill Items ---");
 
-        System.out.print("Enter Cash Tendered: ");
+        for (BillItemRequest item : billItems) {
+            System.out.println("Item: " + item.getItemCode() + " | Batch: " + item.getBatchCode() +
+                    " | Qty: " + item.getQuantity() + " | Price: " + item.getPricePerItem() +
+                    " | Total: " + item.getTotalItemPrice() +
+                    (item.getDiscountID() == null ? "" : " | Discount ID: " + item.getDiscountID()));
+        }
+
+        System.out.print("\nEnter Cash Tendered: ");
         while (!scanner.hasNextBigDecimal()) {
             System.out.println("Invalid input. Please enter a valid amount.");
             scanner.next();
@@ -113,7 +126,13 @@ public class BillCLI {
         billRequest.setCashTendered(scanner.nextBigDecimal());
         scanner.nextLine();
 
-        billService.createBill(billRequest);
-        System.out.println("Bill created successfully!");
+        // Step 1: Create Bill and Get BillID
+        int billID = billService.createBill(billRequest);
+
+        // Step 2: Add Items to Bill
+        billItemService.addBillItems(billID, billItems);
+
+        System.out.println("Bill created successfully! Bill ID: " + billID);
     }
+
 }

@@ -6,10 +6,11 @@ import main.java.com.syos.data.model.Bill;
 
 public class BillDAO implements IBillDAO {
     @Override
-    public void save(Bill bill) {
-        TransactionManager.execute(session -> {
+    public int save(Bill bill) {
+        return TransactionManager.execute(session -> {
             session.save(bill);
-            return null;
+            session.flush();
+            return bill.getBillID();
         });
     }
 }

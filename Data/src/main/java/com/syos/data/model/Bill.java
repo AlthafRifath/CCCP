@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -61,8 +62,8 @@ public class Bill {
     @JoinColumn(name = "UpdatedBy", insertable = false, updatable = false)
     private User updatedByUser;
 
-    @OneToMany(mappedBy = "bill")
-    private List<BillItem> billItems;
+    @OneToMany(mappedBy = "bill", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<BillItem> billItems = new ArrayList<>();
 
     @OneToMany(mappedBy = "bill")
     private List<Transaction> transactions;

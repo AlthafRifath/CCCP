@@ -48,4 +48,16 @@ public class ShelfDAO implements IShelfDAO {
             return null;
         });
     }
+
+    @Override
+    public Shelf findByItemAndBatch(String itemCode, String batchCode) {
+        return TransactionManager.execute(session -> {
+            return session.createQuery(
+                            "FROM Shelf WHERE itemCode = :itemCode AND batchCode = :batchCode AND isDeleted = false",
+                            Shelf.class)
+                    .setParameter("itemCode", itemCode)
+                    .setParameter("batchCode", batchCode)
+                    .uniqueResult();
+        });
+    }
 }
