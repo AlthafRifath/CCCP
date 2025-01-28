@@ -12,8 +12,10 @@ public class Main {
 //            itemCLI.start();
 //            MainStoreStockCLI mainStoreStockCLI = new MainStoreStockCLI();
 //            mainStoreStockCLI.start();
-            ShelfCLI shelfCLI = new ShelfCLI();
-            shelfCLI.start();
+//            ShelfCLI shelfCLI = new ShelfCLI();
+//            shelfCLI.start();
+            BillCLI billCLI = new BillCLI();
+            billCLI.start();
         } else {
             System.out.println("Exiting the application. Please try logging in again.");
         }

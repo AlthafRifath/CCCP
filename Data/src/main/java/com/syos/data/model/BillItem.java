@@ -1,6 +1,9 @@
 package main.java.com.syos.data.model;
 
 import jakarta.persistence.*;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Objects;
 
@@ -24,10 +27,10 @@ public class BillItem {
     private int quantity;
 
     @Column(name = "PricePerItem", nullable = false)
-    private double pricePerItem;
+    private BigDecimal pricePerItem;
 
     @Column(name = "TotalItemPrice", nullable = false)
-    private double totalItemPrice;
+    private BigDecimal totalItemPrice;
 
     @Column(name = "DiscountID")
     private Integer discountID;
@@ -40,7 +43,7 @@ public class BillItem {
 
     @Column(name = "UpdatedDateTime", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    private Date updatedDateTime;
+    private LocalDateTime updatedDateTime;
 
     // Relationships
     @ManyToOne
@@ -95,19 +98,19 @@ public class BillItem {
         this.quantity = quantity;
     }
 
-    public double getPricePerItem() {
+    public BigDecimal getPricePerItem() {
         return pricePerItem;
     }
 
-    public void setPricePerItem(double pricePerItem) {
+    public void setPricePerItem(BigDecimal pricePerItem) {
         this.pricePerItem = pricePerItem;
     }
 
-    public double getTotalItemPrice() {
+    public BigDecimal getTotalItemPrice() {
         return totalItemPrice;
     }
 
-    public void setTotalItemPrice(double totalItemPrice) {
+    public void setTotalItemPrice(BigDecimal totalItemPrice) {
         this.totalItemPrice = totalItemPrice;
     }
 
@@ -135,11 +138,11 @@ public class BillItem {
         this.updatedBy = updatedBy;
     }
 
-    public Date getUpdatedDateTime() {
+    public LocalDateTime getUpdatedDateTime() {
         return updatedDateTime;
     }
 
-    public void setUpdatedDateTime(Date updatedDateTime) {
+    public void setUpdatedDateTime(LocalDateTime updatedDateTime) {
         this.updatedDateTime = updatedDateTime;
     }
 

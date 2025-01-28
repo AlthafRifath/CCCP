@@ -1,7 +1,9 @@
 package main.java.com.syos.data.model;
 
 import jakarta.persistence.*;
-import java.util.Date;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -25,16 +27,16 @@ public class Bill {
 
     @Column(name = "BillDate", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    private Date billDate;
+    private LocalDateTime billDate;
 
     @Column(name = "TotalAmount", nullable = false)
-    private double totalAmount;
+    private BigDecimal totalAmount;
 
     @Column(name = "CashTendered", nullable = false)
-    private double cashTendered;
+    private BigDecimal cashTendered;
 
     @Column(name = "Change", nullable = false)
-    private double change;
+    private BigDecimal change;
 
     @Column(name = "IsDeleted", nullable = false)
     private boolean isDeleted;
@@ -44,7 +46,7 @@ public class Bill {
 
     @Column(name = "UpdatedDateTime", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    private Date updatedDateTime;
+    private LocalDateTime updatedDateTime;
 
     // Relationships
     @ManyToOne
@@ -98,35 +100,35 @@ public class Bill {
         this.serialNumber = serialNumber;
     }
 
-    public Date getBillDate() {
+    public LocalDateTime getBillDate() {
         return billDate;
     }
 
-    public void setBillDate(Date billDate) {
+    public void setBillDate(LocalDateTime billDate) {
         this.billDate = billDate;
     }
 
-    public double getTotalAmount() {
+    public BigDecimal getTotalAmount() {
         return totalAmount;
     }
 
-    public void setTotalAmount(double totalAmount) {
+    public void setTotalAmount(BigDecimal totalAmount) {
         this.totalAmount = totalAmount;
     }
 
-    public double getCashTendered() {
+    public BigDecimal getCashTendered() {
         return cashTendered;
     }
 
-    public void setCashTendered(double cashTendered) {
+    public void setCashTendered(BigDecimal cashTendered) {
         this.cashTendered = cashTendered;
     }
 
-    public double getChange() {
+    public BigDecimal getChange() {
         return change;
     }
 
-    public void setChange(double change) {
+    public void setChange(BigDecimal change) {
         this.change = change;
     }
 
@@ -146,11 +148,11 @@ public class Bill {
         this.updatedBy = updatedBy;
     }
 
-    public Date getUpdatedDateTime() {
+    public LocalDateTime getUpdatedDateTime() {
         return updatedDateTime;
     }
 
-    public void setUpdatedDateTime(Date updatedDateTime) {
+    public void setUpdatedDateTime(LocalDateTime updatedDateTime) {
         this.updatedDateTime = updatedDateTime;
     }
 
