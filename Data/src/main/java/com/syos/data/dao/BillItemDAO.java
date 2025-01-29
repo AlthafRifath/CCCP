@@ -22,4 +22,16 @@ public class BillItemDAO implements IBillItemDAO {
                 .setParameter("billID", billID)
                 .list());
     }
+
+    @Override
+    public List<Object[]> findBillItemsWithItemNames(int billID) {
+        return TransactionManager.execute(session -> session.createQuery(
+                        "SELECT bi.itemCode, bi.batchCode, bi.quantity, bi.pricePerItem, bi.totalItemPrice, " +
+                                "bi.discountID, bi.updatedDateTime, i.itemName " +
+                                "FROM BillItem bi JOIN Item i " +
+                                "ON bi.itemCode = i.itemCode AND bi.batchCode = i.batchCode " +
+                                "WHERE bi.bill.billID = :billID", Object[].class)
+                .setParameter("billID", billID)
+                .list());
+    }
 }

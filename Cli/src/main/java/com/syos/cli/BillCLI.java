@@ -237,8 +237,8 @@ public class BillCLI {
             System.out.println("No items found for this bill.");
         } else {
             for (GetBillItemDTO item : bill.getBillItems()) {
-                System.out.println("Item Code: " + item.getItemCode());
-                System.out.println("Batch Code: " + item.getBatchCode());
+                System.out.println("Item Name: " + item.getItemName());
+//                System.out.println("Batch Code: " + item.getBatchCode());
                 System.out.println("Quantity: " + item.getQuantity());
                 System.out.println("Price Per Item: " + item.getPricePerItem());
                 System.out.println("Total Item Price: " + item.getTotalItemPrice());

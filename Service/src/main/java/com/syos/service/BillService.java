@@ -63,15 +63,18 @@ public class BillService implements IBillService {
         if (bill == null) {
             throw new IllegalArgumentException("Bill not found.");
         }
-        List<GetBillItemDTO> items = billItemDAO.findByBillID(bill.getBillID()).stream()
-                .map(item -> new GetBillItemDTO(
-                        item.getItemCode(),
-                        item.getBatchCode(),
-                        item.getQuantity(),
-                        item.getPricePerItem(),
-                        item.getTotalItemPrice(),
-                        item.getDiscountID(),
-                        item.getUpdatedDateTime()))
+        List<GetBillItemDTO> items = billItemDAO.findBillItemsWithItemNames(bill.getBillID())
+                .stream()
+                .map(obj -> new GetBillItemDTO(
+                        (String) obj[0],  // ItemCode
+                        (String) obj[7],  // ItemName
+                        (String) obj[1],  // BatchCode
+                        (int) obj[2],     // Quantity
+                        (BigDecimal) obj[3],  // PricePerItem
+                        (BigDecimal) obj[4],  // TotalItemPrice
+                        (Integer) obj[5],  // DiscountID
+                        (LocalDateTime) obj[6] // UpdatedDateTime
+                ))
                 .collect(Collectors.toList());
 
         return new GetBillDTO(

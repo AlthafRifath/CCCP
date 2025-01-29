@@ -7,4 +7,5 @@ import java.util.List;
 public interface IBillItemDAO {
     void save(BillItem billItem);
     List<BillItem> findByBillID(int billID);
+    List<Object[]> findBillItemsWithItemNames(int billID);
 }

@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 
 public class GetBillItemDTO {
     private String itemCode;
+    private String itemName;
     private String batchCode;
     private int quantity;
     private BigDecimal pricePerItem;
@@ -12,8 +13,9 @@ public class GetBillItemDTO {
     private Integer discountID;
     private LocalDateTime updatedDateTime;
 
-    public GetBillItemDTO(String itemCode, String batchCode, int quantity, BigDecimal pricePerItem, BigDecimal totalItemPrice, Integer discountID, LocalDateTime updatedDateTime) {
+    public GetBillItemDTO(String itemCode, String itemName, String batchCode, int quantity, BigDecimal pricePerItem, BigDecimal totalItemPrice, Integer discountID, LocalDateTime updatedDateTime) {
         this.itemCode = itemCode;
+        this.itemName = itemName;
         this.batchCode = batchCode;
         this.quantity = quantity;
         this.pricePerItem = pricePerItem;
@@ -25,6 +27,10 @@ public class GetBillItemDTO {
     // Getters
     public String getItemCode() {
         return itemCode;
+    }
+
+    public String getItemName() {
+        return itemName;
     }
 
     public String getBatchCode() {
