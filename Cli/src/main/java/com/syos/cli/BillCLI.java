@@ -1,5 +1,7 @@
 package main.java.com.syos.cli;
 
+import main.java.com.syos.dto.GetBillDTO;
+import main.java.com.syos.dto.GetBillItemDTO;
 import main.java.com.syos.request.BillItemRequest;
 import main.java.com.syos.request.CreateBillRequest;
 import main.java.com.syos.service.BillItemService;
@@ -27,6 +29,7 @@ public class BillCLI {
         while (true) {
             System.out.println("\n=== Billing System ===");
             System.out.println("1. Create Bill");
+            System.out.println("2. View Bill");
             System.out.println("2. Exit");
             System.out.print("Enter your choice: ");
 
@@ -41,7 +44,8 @@ public class BillCLI {
 
             switch (choice) {
                 case 1 -> createBill(scanner);
-                case 2 -> {
+                case 2 -> viewBill(scanner);
+                case 3 -> {
                     System.out.println("Exiting...");
                     return;
                 }
@@ -135,4 +139,83 @@ public class BillCLI {
         System.out.println("Bill created successfully! Bill ID: " + billID);
     }
 
+    private void viewBill(Scanner scanner) {
+        System.out.println("\n=== View Bill ===");
+        System.out.println("1. Search by BillID");
+        System.out.println("2. Search by SerialNumber");
+        System.out.print("Enter your choice: ");
+
+        if (!scanner.hasNextInt()) {
+            System.out.println("Invalid input. Please enter a number.");
+            scanner.next();
+            return;
+        }
+
+        int searchChoice = scanner.nextInt();
+        scanner.nextLine();
+
+        GetBillDTO billDTO = null;
+
+        if (searchChoice == 1) {
+            System.out.print("Enter BillID: ");
+            if (!scanner.hasNextInt()) {
+                System.out.println("Invalid input. Please enter a valid BillID.");
+                scanner.next();
+                return;
+            }
+            int billID = scanner.nextInt();
+            scanner.nextLine();
+
+            try {
+                billDTO = billService.getBillByID(billID);
+            } catch (IllegalArgumentException e) {
+                System.err.println(e.getMessage());
+                return;
+            }
+        } else if (searchChoice == 2) {
+            System.out.print("Enter SerialNumber: ");
+            String serialNumber = scanner.nextLine();
+
+            try {
+                billDTO = billService.getBillBySerialNumber(serialNumber);
+            } catch (IllegalArgumentException e) {
+                System.err.println(e.getMessage());
+                return;
+            }
+        } else {
+            System.out.println("Invalid choice.");
+            return;
+        }
+
+        // Display Bill Details
+        printBillDetails(billDTO);
+    }
+
+    private void printBillDetails(GetBillDTO bill) {
+        System.out.println("\n=== Bill Details ===");
+        System.out.println("BillID: " + bill.getBillID());
+        System.out.println("SerialNumber: " + bill.getSerialNumber());
+        System.out.println("CustomerID: " + (bill.getCustomerID() != null ? bill.getCustomerID() : "Walk-in"));
+        System.out.println("DiscountID: " + (bill.getDiscountID() != null ? bill.getDiscountID() : "None"));
+        System.out.println("Bill Date: " + bill.getBillDate());
+        System.out.println("Total Amount: " + bill.getTotalAmount());
+        System.out.println("Cash Tendered: " + bill.getCashTendered());
+        System.out.println("Change: " + bill.getChange());
+
+        System.out.println("\n=== Bill Items ===");
+        if (bill.getBillItems().isEmpty()) {
+            System.out.println("No items found for this bill.");
+        } else {
+            for (GetBillItemDTO item : bill.getBillItems()) {
+                System.out.println("Item Code: " + item.getItemCode());
+                System.out.println("Batch Code: " + item.getBatchCode());
+                System.out.println("Quantity: " + item.getQuantity());
+                System.out.println("Price Per Item: " + item.getPricePerItem());
+                System.out.println("Total Item Price: " + item.getTotalItemPrice());
+                System.out.println("Discount ID: " + (item.getDiscountID() != null ? item.getDiscountID() : "None"));
+                System.out.println("Updated Date: " + item.getUpdatedDateTime());
+                System.out.println("-------------------------");
+            }
+        }
+    }
 }

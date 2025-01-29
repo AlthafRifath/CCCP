@@ -13,4 +13,20 @@ public class BillDAO implements IBillDAO {
             return bill.getBillID();
         });
     }
+
+    @Override
+    public Bill findByBillID(int billID) {
+        return TransactionManager.execute(session -> session.createQuery(
+                        "FROM Bill WHERE billID = :billID AND isDeleted = false", Bill.class)
+                .setParameter("billID", billID)
+                .uniqueResult());
+    }
+
+    @Override
+    public Bill findBySerialNumber(String serialNumber) {
+        return TransactionManager.execute(session -> session.createQuery(
+                        "FROM Bill WHERE serialNumber = :serialNumber AND isDeleted = false", Bill.class)
+                .setParameter("serialNumber", serialNumber)
+                .uniqueResult());
+    }
 }
