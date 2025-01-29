@@ -143,30 +143,21 @@ public class BillCLI {
         // Step 2: Add Items to Bill
         billItemService.addBillItems(billID, billItems);
 
-        // Step 3: Prompt for Transaction Type
-        System.out.println("\nSelect Transaction Type:");
-        System.out.println("1 - Cash");
-        System.out.println("2 - Card");
-        int transactionChoice;
-        while (true) {
-            if (!scanner.hasNextInt()) {
-                System.out.println("Invalid input. Please enter 1 for Cash or 2 for Card.");
-                scanner.next();
-                continue;
-            }
-            transactionChoice = scanner.nextInt();
-            scanner.nextLine();
-            if (transactionChoice == 1 || transactionChoice == 2) break;
-            System.out.println("Invalid choice. Enter 1 for Cash or 2 for Card.");
-        }
+        TransactionType transactionType = TransactionType.InStore;
 
-        TransactionType transactionType = (transactionChoice == 1) ? TransactionType.CASH : TransactionType.CARD;
-
-        // Step 4: Record Transaction
+        // Step 3: Record Transaction
         TransactionRequest transactionRequest = new TransactionRequest(billID, transactionType);
         transactionService.recordTransaction(transactionRequest);
 
         System.out.println("Bill created successfully! Bill ID: " + billID);
+
+        // Fetch & Print Bill Details
+        try {
+            GetBillDTO billDTO = billService.getBillByID(billID);
+            printBillDetails(billDTO);
+        } catch (IllegalArgumentException e) {
+            System.err.println("Error fetching bill details: " + e.getMessage());
+        }
     }
 
     private void viewBill(Scanner scanner) {
