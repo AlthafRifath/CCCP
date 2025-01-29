@@ -2,12 +2,16 @@ package main.java.com.syos.cli;
 
 import main.java.com.syos.dto.GetBillDTO;
 import main.java.com.syos.dto.GetBillItemDTO;
+import main.java.com.syos.enums.TransactionType;
 import main.java.com.syos.request.BillItemRequest;
 import main.java.com.syos.request.CreateBillRequest;
+import main.java.com.syos.request.TransactionRequest;
 import main.java.com.syos.service.BillItemService;
 import main.java.com.syos.service.BillService;
+import main.java.com.syos.service.TransactionService;
 import main.java.com.syos.service.interfaces.IBillItemService;
 import main.java.com.syos.service.interfaces.IBillService;
+import main.java.com.syos.service.interfaces.ITransactionService;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -17,10 +21,12 @@ import java.util.Scanner;
 public class BillCLI {
     private final IBillService billService;
     private final IBillItemService billItemService;
+    private final ITransactionService transactionService;
 
     public BillCLI() {
         this.billService = new BillService();
         this.billItemService = new BillItemService();
+        this.transactionService = new TransactionService();
     }
 
     public void start() {
@@ -96,6 +102,7 @@ public class BillCLI {
             String itemDiscountInput = scanner.nextLine();
             Integer itemDiscountId = itemDiscountInput.isEmpty() ? null : Integer.parseInt(itemDiscountInput);
 
+            // Create Bill Item
             BillItemRequest billItem = new BillItemRequest(itemCode, batchCode, quantity, pricePerItem, itemDiscountId);
             billItems.add(billItem);
 
@@ -135,6 +142,29 @@ public class BillCLI {
 
         // Step 2: Add Items to Bill
         billItemService.addBillItems(billID, billItems);
+
+        // Step 3: Prompt for Transaction Type
+        System.out.println("\nSelect Transaction Type:");
+        System.out.println("1 - Cash");
+        System.out.println("2 - Card");
+        int transactionChoice;
+        while (true) {
+            if (!scanner.hasNextInt()) {
+                System.out.println("Invalid input. Please enter 1 for Cash or 2 for Card.");
+                scanner.next();
+                continue;
+            }
+            transactionChoice = scanner.nextInt();
+            scanner.nextLine();
+            if (transactionChoice == 1 || transactionChoice == 2) break;
+            System.out.println("Invalid choice. Enter 1 for Cash or 2 for Card.");
+        }
+
+        TransactionType transactionType = (transactionChoice == 1) ? TransactionType.CASH : TransactionType.CARD;
+
+        // Step 4: Record Transaction
+        TransactionRequest transactionRequest = new TransactionRequest(billID, transactionType);
+        transactionService.recordTransaction(transactionRequest);
 
         System.out.println("Bill created successfully! Bill ID: " + billID);
     }

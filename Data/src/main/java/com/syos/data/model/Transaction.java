@@ -1,7 +1,8 @@
 package main.java.com.syos.data.model;
 
 import jakarta.persistence.*;
-import java.util.Date;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "tblTransaction")
@@ -20,7 +21,7 @@ public class Transaction {
 
     @Column(name = "TransactionDate", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    private Date transactionDate;
+    private LocalDateTime transactionDate;
 
     @Column(name = "IsDeleted", nullable = false)
     private boolean isDeleted;
@@ -30,7 +31,7 @@ public class Transaction {
 
     @Column(name = "UpdatedDateTime", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    private Date updatedDateTime;
+    private LocalDateTime  updatedDateTime;
 
     // Relationships
     @ManyToOne
@@ -66,11 +67,11 @@ public class Transaction {
         this.transactionType = transactionType;
     }
 
-    public Date getTransactionDate() {
+    public LocalDateTime  getTransactionDate() {
         return transactionDate;
     }
 
-    public void setTransactionDate(Date transactionDate) {
+    public void setTransactionDate(LocalDateTime  transactionDate) {
         this.transactionDate = transactionDate;
     }
 
@@ -90,11 +91,11 @@ public class Transaction {
         this.updatedBy = updatedBy;
     }
 
-    public Date getUpdatedDateTime() {
+    public LocalDateTime  getUpdatedDateTime() {
         return updatedDateTime;
     }
 
-    public void setUpdatedDateTime(Date updatedDateTime) {
+    public void setUpdatedDateTime(LocalDateTime  updatedDateTime) {
         this.updatedDateTime = updatedDateTime;
     }
 
