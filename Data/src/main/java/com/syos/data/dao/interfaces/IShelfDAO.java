@@ -11,4 +11,6 @@ public interface IShelfDAO {
     Optional<Shelf> findByCompositeKey(int storeId, int shelfId, String itemCode, String batchCode);
     void update(Shelf shelf);
     Shelf findByItemAndBatch(String itemCode, String batchCode);
+    List<Shelf> getCurrentStock();
+    List<Shelf> getItemsBelowThreshold(int threshold);
 }

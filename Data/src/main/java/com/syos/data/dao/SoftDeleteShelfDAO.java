@@ -38,6 +38,16 @@ public class SoftDeleteShelfDAO implements IShelfDAO{
         return null;
     }
 
+    @Override
+    public List<Shelf> getCurrentStock() {
+        return List.of();
+    }
+
+    @Override
+    public List<Shelf> getItemsBelowThreshold(int threshold) {
+        return List.of();
+    }
+
     public void softDeleteShelf(int storeId, int shelfId, String itemCode, String batchCode, int updatedBy) {
         Optional<Shelf> optionalShelf = decoratedDAO.findByCompositeKey(storeId, shelfId, itemCode, batchCode);
         if (optionalShelf.isEmpty()) {

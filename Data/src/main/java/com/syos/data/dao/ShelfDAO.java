@@ -60,4 +60,18 @@ public class ShelfDAO implements IShelfDAO {
                     .uniqueResult();
         });
     }
+
+    @Override
+    public List<Shelf> getCurrentStock() {
+        return TransactionManager.execute(session -> session.createQuery(
+                "FROM Shelf WHERE isDeleted = false", Shelf.class).list());
+    }
+
+    @Override
+    public List<Shelf> getItemsBelowThreshold(int threshold) {
+        return TransactionManager.execute(session -> session.createQuery(
+                        "FROM Shelf WHERE quantityOnShelf < :threshold AND isDeleted = false", Shelf.class)
+                .setParameter("threshold", threshold)
+                .list());
+    }
 }

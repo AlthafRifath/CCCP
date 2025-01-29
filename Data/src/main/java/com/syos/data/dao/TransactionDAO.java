@@ -12,4 +12,12 @@ public class TransactionDAO implements ITransactionDAO {
             return null;
         });
     }
+
+    @Override
+    public Transaction getTransactionByBillID(int billID) {
+        return TransactionManager.execute(session -> session.createQuery(
+                        "FROM Transaction WHERE billID = :billID", Transaction.class)
+                .setParameter("billID", billID)
+                .uniqueResult());
+    }
 }

@@ -3,6 +3,10 @@ package main.java.com.syos.data.dao;
 import com.syos.util.TransactionManager;
 import main.java.com.syos.data.dao.interfaces.IBillDAO;
 import main.java.com.syos.data.model.Bill;
+import main.java.com.syos.data.model.BillItem;
+
+import java.time.LocalDate;
+import java.util.List;
 
 public class BillDAO implements IBillDAO {
     @Override
@@ -28,5 +32,22 @@ public class BillDAO implements IBillDAO {
                         "FROM Bill WHERE serialNumber = :serialNumber AND isDeleted = false", Bill.class)
                 .setParameter("serialNumber", serialNumber)
                 .uniqueResult());
+    }
+
+    @Override
+    public List<BillItem> getSalesForToday() {
+        return TransactionManager.execute(session -> session.createQuery(
+                        "SELECT bi FROM BillItem bi " +
+                                "JOIN bi.bill b " +
+                                "WHERE DATE(b.billDate) = :today", BillItem.class)
+                .setParameter("today", LocalDate.now())
+                .list());
+    }
+
+    @Override
+    public List<Bill> getAllBills() {
+        return TransactionManager.execute(session -> session.createQuery(
+                        "FROM Bill WHERE isDeleted = false", Bill.class)
+                .list());
     }
 }
