@@ -22,5 +22,6 @@
     <orderEntry type="module" module-name="Reports" exported="" />
     <orderEntry type="module" module-name="Data" exported="" />
     <orderEntry type="module" module-name="Public" />
+    <orderEntry type="module" module-name="Library" exported="" />
   </component>
 </module>
