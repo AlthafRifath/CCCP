@@ -39,7 +39,7 @@ public class BillDAO implements IBillDAO {
         return TransactionManager.execute(session -> session.createQuery(
                         "SELECT bi FROM BillItem bi " +
                                 "JOIN bi.bill b " +
-                                "WHERE DATE(b.billDate) = :today", BillItem.class)
+                                "WHERE CAST(b.billDate AS DATE) = :today", BillItem.class)
                 .setParameter("today", LocalDate.now())
                 .list());
     }
