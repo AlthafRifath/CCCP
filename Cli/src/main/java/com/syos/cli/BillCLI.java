@@ -36,7 +36,7 @@ public class BillCLI {
             System.out.println("\n=== Billing System ===");
             System.out.println("1. Create Bill");
             System.out.println("2. View Bill");
-            System.out.println("2. Exit");
+            System.out.println("3. Exit");
             System.out.print("Enter your choice: ");
 
             if (!scanner.hasNextInt()) {

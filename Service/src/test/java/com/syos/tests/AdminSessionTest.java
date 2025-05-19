@@ -1,60 +1,61 @@
 package test.java.com.syos.tests;
 
 import main.java.com.syos.service.AdminSession;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 public class AdminSessionTest {
 
-    /**
-     * Test description:
-     * This method tests the singleton behavior of the getInstance() method.
-     * It ensures that multiple calls to getInstance() return the same instance.
-     */
+    @BeforeEach
+    void setUp() {
+        // Reset AdminSession before each test to ensure test isolation
+        AdminSession.getInstance().logout();
+    }
+
     @Test
-    public void testGetInstance_ReturnsSameInstance() {
-        // Act
+    public void testSingletonInstance() {
+        // Ensure multiple calls return the same instance
         AdminSession instance1 = AdminSession.getInstance();
         AdminSession instance2 = AdminSession.getInstance();
 
-        // Assert
-        assertNotNull(instance1, "getInstance() should not return null.");
-        assertSame(instance1, instance2, "getInstance() should always return the same instance.");
+        Assertions.assertSame(instance1, instance2, "Instances should be the same (Singleton pattern).");
     }
 
-    /**
-     * Test description:
-     * This method tests if a retrieved AdminSession instance allows updating the loggedInUserId
-     * and verifies that the same instance persists the updated state.
-     */
     @Test
-    public void testGetInstance_ModifyAndPersistState() {
-        // Arrange
-        AdminSession instance = AdminSession.getInstance();
-        Integer testUserId = 101;
+    public void testSetAndGetLoggedInUserId() {
+        AdminSession session = AdminSession.getInstance();
+        session.setLoggedInUserId(1001);
 
-        // Act
-        instance.setLoggedInUserId(testUserId);
-
-        // Assert
-        assertEquals(testUserId, instance.getLoggedInUserId(), "The loggedInUserId should be set and retrievable.");
+        // Verify stored user ID
+        Assertions.assertEquals(1001, session.getLoggedInUserId(), "User ID should match the set value.");
     }
 
-    /**
-     * Test description:
-     * This method tests if calling the logout() method resets the loggedInUserId to null.
-     */
     @Test
-    public void testLogout_ResetsLoggedInUserId() {
-        // Arrange
-        AdminSession instance = AdminSession.getInstance();
-        instance.setLoggedInUserId(202);
+    public void testLogout() {
+        AdminSession session = AdminSession.getInstance();
+        session.setLoggedInUserId(1001);
 
-        // Act
-        instance.logout();
+        // Perform logout
+        session.logout();
 
-        // Assert
-        assertNull(instance.getLoggedInUserId(), "After logout, loggedInUserId should be null.");
+        // Ensure user ID is cleared
+        Assertions.assertNull(session.getLoggedInUserId(), "Logged-in user should be null after logout.");
+    }
+
+    @Test
+    public void testThreadSafety_SingleInstance() throws InterruptedException {
+        final AdminSession[] session1 = new AdminSession[1];
+        final AdminSession[] session2 = new AdminSession[1];
+
+        Thread thread1 = new Thread(() -> session1[0] = AdminSession.getInstance());
+        Thread thread2 = new Thread(() -> session2[0] = AdminSession.getInstance());
+
+        thread1.start();
+        thread2.start();
+        thread1.join();
+        thread2.join();
+
+        Assertions.assertSame(session1[0], session2[0], "Instances from different threads should be the same.");
     }
 }

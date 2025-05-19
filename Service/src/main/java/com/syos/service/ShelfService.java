@@ -183,4 +183,11 @@ public class ShelfService implements IShelfService {
                 updatedBy
         );
     }
+
+    @Override
+    public List<Shelf> getAllShelves() {
+        return TransactionManager.execute(session ->
+                session.createQuery("FROM Shelf WHERE isDeleted = false", Shelf.class).list()
+        );
+    }
 }

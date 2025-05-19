@@ -1,0 +1,15 @@
+<web-app xmlns="http://jakarta.ee/xml/ns/jakartaee"
+         version="5.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://jakarta.ee/xml/ns/jakartaee ">
+
+    <servlet>
+        <servlet-name>ClientTestServlet</servlet-name>
+        <servlet-class>ClientTestServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>ClientTestServlet</servlet-name>
+        <url-pattern>/api/client</url-pattern>
+    </servlet-mapping>
+
+</web-app>

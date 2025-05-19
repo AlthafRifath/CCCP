@@ -1,183 +1,183 @@
 package test.java.com.syos.tests;
 
+import main.java.com.syos.data.dao.interfaces.IItemDAO;
+import main.java.com.syos.data.dao.interfaces.IMainStoreStockDAO;
+import main.java.com.syos.data.model.MainStoreStock;
+import main.java.com.syos.data.model.Item;
+import main.java.com.syos.request.InsertMainStoreStockRequest;
+import main.java.com.syos.request.DeleteMainStoreStockItemRequest;
+import main.java.com.syos.dto.GetMainStoreStockDetailsDTO;
+import main.java.com.syos.service.AdminSession;
+import main.java.com.syos.service.MainStoreStockService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-// ✅ Unique Mock Classes (Inside this test file)
-class MockAdminSession_MainStoreStock {
-    Integer getLoggedInUserId() { return 1; } // Simulated admin login
-}
-
-class MockMainStoreStockDAO_MainStoreStock {
-    void save(MockMainStoreStock stock) {}
-    Optional<MockMainStoreStock> findByStoreIdAndItemCodeAndBatchCode(int storeId, String itemCode, String batchCode) {
-        return Optional.empty(); // Default: No stock found
-    }
-    void softDelete(MockMainStoreStock stock) {}
-}
-
-class MockItemDAO_MainStoreStock {
-    Optional<MockItem_MainStoreStock> findByItemCodeAndBatchCode(String itemCode, String batchCode) {
-        return Optional.empty(); // Default: Item not found
-    }
-    void update(MockItem_MainStoreStock item) {}
-}
-
-class MockMainStoreStock {
-    int storeID;
-    String itemCode, batchCode;
-    int initialStock, currentStock;
-    LocalDateTime lastRestockedDate;
-    boolean isDeleted;
-}
-
-class MockItem_MainStoreStock {
-    String itemCode, batchCode;
-    int currentQuantity;
-    LocalDateTime updatedDateTime;
-}
-
-// ✅ Unique Service class (Mocked with business logic only)
-class MockMainStoreStockService {
-    private final MockAdminSession_MainStoreStock adminSession;
-    private final MockMainStoreStockDAO_MainStoreStock mainStoreStockDAO;
-    private final MockItemDAO_MainStoreStock itemDAO;
-
-    MockMainStoreStockService(MockAdminSession_MainStoreStock adminSession, MockMainStoreStockDAO_MainStoreStock mainStoreStockDAO, MockItemDAO_MainStoreStock itemDAO) {
-        this.adminSession = adminSession;
-        this.mainStoreStockDAO = mainStoreStockDAO;
-        this.itemDAO = itemDAO;
-    }
-
-    void insertMainStoreStock(String itemCode, String batchCode, int initialStock, int currentStock) {
-        if (itemCode == null || itemCode.isEmpty()) {
-            throw new IllegalArgumentException("Item Code cannot be null or empty.");
-        }
-        if (batchCode == null || batchCode.isEmpty()) {
-            throw new IllegalArgumentException("Batch Code cannot be null or empty.");
-        }
-        if (initialStock < 0) {
-            throw new IllegalArgumentException("Initial Stock cannot be negative.");
-        }
-        if (currentStock < 0) {
-            throw new IllegalArgumentException("Current Stock cannot be negative.");
-        }
-
-        MockMainStoreStock stock = new MockMainStoreStock();
-        stock.itemCode = itemCode;
-        stock.batchCode = batchCode;
-        stock.initialStock = initialStock;
-        stock.currentStock = currentStock;
-        stock.lastRestockedDate = LocalDateTime.now();
-        stock.isDeleted = false;
-
-        mainStoreStockDAO.save(stock);
-
-        // Check if the item exists
-        Optional<MockItem_MainStoreStock> itemOptional = itemDAO.findByItemCodeAndBatchCode(itemCode, batchCode);
-        if (itemOptional.isPresent()) {
-            MockItem_MainStoreStock item = itemOptional.get();
-
-            if (item.currentQuantity >= initialStock) {
-                item.currentQuantity -= initialStock;
-                item.updatedDateTime = LocalDateTime.now();
-                itemDAO.update(item);
-            } else {
-                throw new IllegalStateException("Insufficient stock in Item table to add to MainStoreStock.");
-            }
-        } else {
-            throw new IllegalArgumentException("Item not found with ItemCode: " + itemCode + " and BatchCode: " + batchCode);
-        }
-    }
-
-    void deleteMainStoreStockItem(int storeId, String itemCode, String batchCode) {
-        Optional<MockMainStoreStock> stockOptional = mainStoreStockDAO.findByStoreIdAndItemCodeAndBatchCode(storeId, itemCode, batchCode);
-
-        if (stockOptional.isEmpty()) {
-            throw new IllegalArgumentException("Stock not found for the provided StoreId, ItemCode, and BatchCode.");
-        }
-
-        MockMainStoreStock stock = stockOptional.get();
-        if (stock.currentStock != 0) {
-            throw new IllegalStateException("Cannot delete stock. Current stock must be 0.");
-        }
-
-        mainStoreStockDAO.softDelete(stock);
-    }
-}
-
-// ✅ Unique Test Class
 public class MainStoreStockServiceTest {
-    private MockMainStoreStockService stockService;
-    private MockAdminSession_MainStoreStock mockSession;
-    private MockMainStoreStockDAO_MainStoreStock mockStockDAO;
-    private MockItemDAO_MainStoreStock mockItemDAO;
+
+    private MainStoreStockService mainStoreStockService;
+    private IMainStoreStockDAO mockMainStoreStockDAO;
+    private AdminSession mockSession;
+    private IItemDAO mockItemDAO;
 
     @BeforeEach
     void setUp() {
-        mockSession = Mockito.mock(MockAdminSession_MainStoreStock.class);
-        mockStockDAO = Mockito.mock(MockMainStoreStockDAO_MainStoreStock.class);
-        mockItemDAO = Mockito.mock(MockItemDAO_MainStoreStock.class);
+        // Mock dependencies
+        mockMainStoreStockDAO = Mockito.mock(IMainStoreStockDAO.class);
+        mockItemDAO = Mockito.mock(IItemDAO.class);
+        mockSession = Mockito.mock(AdminSession.class);
 
-        stockService = new MockMainStoreStockService(mockSession, mockStockDAO, mockItemDAO);
+        // Ensure user is logged in
+        Mockito.when(mockSession.getLoggedInUserId()).thenReturn(1);
+
+        // Inject mocks into service
+//        mainStoreStockService = new MainStoreStockService(mockMainStoreStockDAO, mockItemDAO, mockSession);
     }
 
     @Test
     public void testInsertMainStoreStock_SuccessfulInsertion() {
-        Mockito.when(mockSession.getLoggedInUserId()).thenReturn(1);
-        Mockito.when(mockItemDAO.findByItemCodeAndBatchCode("item123", "batch001"))
-                .thenReturn(Optional.of(new MockItem_MainStoreStock()));
+        InsertMainStoreStockRequest request = new InsertMainStoreStockRequest(
+                1, "ITEM001", "BATCH01", 10, 10, LocalDateTime.now()
+        );
 
-        Assertions.assertDoesNotThrow(() -> stockService.insertMainStoreStock("item123", "batch001", 10, 10));
+        // Mock item availability
+        Item mockItem = new Item();
+        mockItem.setCurrentQuantity(20);
+        Mockito.when(mockItemDAO.findByItemCodeAndBatchCode("ITEM001", "BATCH01")).thenReturn(Optional.of(mockItem));
 
-        Mockito.verify(mockStockDAO, Mockito.times(1)).save(Mockito.any());
+        // Execute method
+        Assertions.assertDoesNotThrow(() -> mainStoreStockService.insertMainStoreStock(request));
+
+        // Capture and verify MainStoreStock
+        ArgumentCaptor<MainStoreStock> stockCaptor = ArgumentCaptor.forClass(MainStoreStock.class);
+        Mockito.verify(mockMainStoreStockDAO, Mockito.times(1)).save(stockCaptor.capture());
+        MainStoreStock savedStock = stockCaptor.getValue();
+
+        Assertions.assertEquals("ITEM001", savedStock.getItemCode());
+        Assertions.assertEquals("BATCH01", savedStock.getBatchCode());
+        Assertions.assertEquals(10, savedStock.getInitialStock());
+        Assertions.assertEquals(10, savedStock.getCurrentStock());
     }
 
     @Test
-    public void testInsertMainStoreStock_InvalidItemCode_ThrowsException() {
-        Mockito.when(mockSession.getLoggedInUserId()).thenReturn(1);
+    public void testInsertMainStoreStock_InsufficientStock_ThrowsException() {
+        InsertMainStoreStockRequest request = new InsertMainStoreStockRequest(
+                1, "ITEM001", "BATCH01", 10, 10, LocalDateTime.now()
+        );
 
-        Assertions.assertThrows(IllegalArgumentException.class, () -> stockService.insertMainStoreStock("", "batch001", 10, 10));
+        // Mock item with insufficient stock
+        Item mockItem = new Item();
+        mockItem.setCurrentQuantity(5);
+        Mockito.when(mockItemDAO.findByItemCodeAndBatchCode("ITEM001", "BATCH01")).thenReturn(Optional.of(mockItem));
 
-        Mockito.verifyNoInteractions(mockStockDAO);
+        // Expect an exception
+        Assertions.assertThrows(IllegalStateException.class, () -> mainStoreStockService.insertMainStoreStock(request));
+
+        // Ensure save() was never called
+        Mockito.verifyNoInteractions(mockMainStoreStockDAO);
     }
 
     @Test
     public void testInsertMainStoreStock_ItemNotFound_ThrowsException() {
-        Mockito.when(mockSession.getLoggedInUserId()).thenReturn(1);
-        Mockito.when(mockItemDAO.findByItemCodeAndBatchCode("item123", "batch001")).thenReturn(Optional.empty());
+        InsertMainStoreStockRequest request = new InsertMainStoreStockRequest(
+                1, "ITEM001", "BATCH01", 10, 10, LocalDateTime.now()
+        );
 
-        Assertions.assertThrows(IllegalArgumentException.class, () -> stockService.insertMainStoreStock("item123", "batch001", 10, 10));
+        // Mock item as non-existent
+        Mockito.when(mockItemDAO.findByItemCodeAndBatchCode("ITEM001", "BATCH01")).thenReturn(Optional.empty());
+
+        // Expect an exception
+        Assertions.assertThrows(IllegalArgumentException.class, () -> mainStoreStockService.insertMainStoreStock(request));
+
+        // Ensure save() was never called
+        Mockito.verifyNoInteractions(mockMainStoreStockDAO);
+    }
+
+    @Test
+    public void testInsertMainStoreStock_UserNotLoggedIn_ThrowsException() {
+        Mockito.when(mockSession.getLoggedInUserId()).thenReturn(null);
+
+        InsertMainStoreStockRequest request = new InsertMainStoreStockRequest(
+                1, "ITEM001", "BATCH01", 10, 10, LocalDateTime.now()
+        );
+
+        // Expect an exception
+        Assertions.assertThrows(IllegalStateException.class, () -> mainStoreStockService.insertMainStoreStock(request));
+
+        // Ensure save() was never called
+        Mockito.verifyNoInteractions(mockMainStoreStockDAO);
+    }
+
+    @Test
+    public void testGetMainStoreStockDetails_SuccessfulRetrieval() {
+        int storeId = 1;
+        String itemCode = "ITEM001";
+        String batchCode = "BATCH01";
+
+        // Mock stock retrieval
+        MainStoreStock mockStock = new MainStoreStock();
+        mockStock.setStoreID(storeId);
+        mockStock.setItemCode(itemCode);
+        mockStock.setBatchCode(batchCode);
+        mockStock.setInitialStock(10);
+        mockStock.setCurrentStock(5);
+        mockStock.setLastRestockedDate(LocalDateTime.now());
+
+        Mockito.when(mockMainStoreStockDAO.findByStoreIdAndItemCodeAndBatchCode(storeId, itemCode, batchCode))
+                .thenReturn(Optional.of(mockStock));
+
+        Optional<GetMainStoreStockDetailsDTO> stockDetails = mainStoreStockService.getMainStoreStockDetails(storeId, itemCode, batchCode);
+
+        Assertions.assertTrue(stockDetails.isPresent());
+        Assertions.assertEquals(itemCode, stockDetails.get().getItemCode());
+        Assertions.assertEquals(batchCode, stockDetails.get().getBatchCode());
+        Assertions.assertEquals(10, stockDetails.get().getInitialStock());
     }
 
     @Test
     public void testDeleteMainStoreStockItem_SuccessfulDeletion() {
-        Mockito.when(mockSession.getLoggedInUserId()).thenReturn(1);
+        DeleteMainStoreStockItemRequest request = new DeleteMainStoreStockItemRequest(1, "ITEM001", "BATCH01");
 
-        MockMainStoreStock mockStock = new MockMainStoreStock();
-        mockStock.currentStock = 0;
-        Mockito.when(mockStockDAO.findByStoreIdAndItemCodeAndBatchCode(1, "item123", "batch001"))
+        // Mock stock retrieval
+        MainStoreStock mockStock = new MainStoreStock();
+        mockStock.setStoreID(1);
+        mockStock.setItemCode("ITEM001");
+        mockStock.setBatchCode("BATCH01");
+        mockStock.setCurrentStock(0); // Must be 0 to delete
+
+        Mockito.when(mockMainStoreStockDAO.findByStoreIdAndItemCodeAndBatchCode(1, "ITEM001", "BATCH01"))
                 .thenReturn(Optional.of(mockStock));
 
-        Assertions.assertDoesNotThrow(() -> stockService.deleteMainStoreStockItem(1, "item123", "batch001"));
+        // Execute deletion
+        Assertions.assertDoesNotThrow(() -> mainStoreStockService.deleteMainStoreStockItem(request));
 
-        Mockito.verify(mockStockDAO, Mockito.times(1)).softDelete(Mockito.any());
+        // Verify delete operation
+        Mockito.verify(mockMainStoreStockDAO, Mockito.times(1)).softDelete(mockStock);
     }
 
     @Test
-    public void testDeleteMainStoreStockItem_StockNotZero_ThrowsException() {
-        Mockito.when(mockSession.getLoggedInUserId()).thenReturn(1);
+    public void testDeleteMainStoreStockItem_NonZeroStock_ThrowsException() {
+        DeleteMainStoreStockItemRequest request = new DeleteMainStoreStockItemRequest(1, "ITEM001", "BATCH01");
 
-        MockMainStoreStock mockStock = new MockMainStoreStock();
-        mockStock.currentStock = 5;
-        Mockito.when(mockStockDAO.findByStoreIdAndItemCodeAndBatchCode(1, "item123", "batch001"))
+        // Mock stock with non-zero quantity
+        MainStoreStock mockStock = new MainStoreStock();
+        mockStock.setStoreID(1);
+        mockStock.setItemCode("ITEM001");
+        mockStock.setBatchCode("BATCH01");
+        mockStock.setCurrentStock(5); // Must be 0 to delete
+
+        Mockito.when(mockMainStoreStockDAO.findByStoreIdAndItemCodeAndBatchCode(1, "ITEM001", "BATCH01"))
                 .thenReturn(Optional.of(mockStock));
 
-        Assertions.assertThrows(IllegalStateException.class, () -> stockService.deleteMainStoreStockItem(1, "item123", "batch001"));
+        // Expect an exception
+        Assertions.assertThrows(IllegalStateException.class, () -> mainStoreStockService.deleteMainStoreStockItem(request));
+
+        // Ensure delete was never called
+        Mockito.verify(mockMainStoreStockDAO, Mockito.never()).softDelete(mockStock);
     }
 }

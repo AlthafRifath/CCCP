@@ -4,7 +4,7 @@ import main.java.com.syos.data.model.Shelf;
 import main.java.com.syos.service.notifications.interfaces.IStockNotifier;
 
 public class StockNotificationObserver implements IStockNotifier {
-    private static final int LOW_STOCK_THRESHOLD = 5; // Example threshold
+    private static final int LOW_STOCK_THRESHOLD = 50;
 
     @Override
     public void notifyStockLevel(Shelf shelf) {

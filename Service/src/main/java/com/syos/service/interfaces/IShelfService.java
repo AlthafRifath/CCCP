@@ -13,4 +13,6 @@ public interface IShelfService {
     List<GetShelfDetailsDTO> getShelfDetailsByShelfIdAndStoreId(int shelfId, int storeId);
     void updateShelf(UpdateShelfRequest request);
     void deleteShelf(DeleteShelfRequest request);
+
+    List<Shelf> getAllShelves();
 }

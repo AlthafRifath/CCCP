@@ -1,182 +1,124 @@
 package test.java.com.syos.tests;
 
+import main.java.com.syos.data.dao.interfaces.IBillItemDAO;
+import main.java.com.syos.data.dao.interfaces.IShelfDAO;
+import main.java.com.syos.data.model.BillItem;
+import main.java.com.syos.data.model.Shelf;
+import main.java.com.syos.request.BillItemRequest;
+import main.java.com.syos.service.AdminSession;
+import main.java.com.syos.service.BillItemService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 
-// Mock Classes (Inside the test file itself)
-class MockAdminSessionForBillItem {
-    Integer getLoggedInUserId() { return 1; } // Simulating a logged-in user
-}
-
-class MockShelfDAO {
-    MockShelf findByItemAndBatch(String itemCode, String batchCode) {
-        return null; // Default behavior: No item found
-    }
-}
-
-class MockBillItemDAO {
-    void save(MockBillItem billItem) {
-        // Simulated DB save operation (does nothing)
-    }
-}
-
-class MockShelf {
-    String itemCode, batchCode;
-    int quantityOnShelf;
-    Integer updatedBy;
-    LocalDateTime updatedDateTime;
-
-    MockShelf(String itemCode, String batchCode, int quantityOnShelf) {
-        this.itemCode = itemCode;
-        this.batchCode = batchCode;
-        this.quantityOnShelf = quantityOnShelf;
-    }
-}
-
-class MockBillItem {
-    int billID;
-    String itemCode, batchCode;
-    int quantity;
-    BigDecimal pricePerItem, totalItemPrice;
-    Integer updatedBy;
-    LocalDateTime updatedDateTime;
-}
-
-// Service class (Mocked with business logic only)
-class MockBillItemService {
-    private final MockAdminSessionForBillItem adminSession;
-    private final MockShelfDAO shelfDAO;
-    private final MockBillItemDAO billItemDAO;
-
-    MockBillItemService(MockAdminSessionForBillItem adminSession, MockShelfDAO shelfDAO, MockBillItemDAO billItemDAO) {
-        this.adminSession = adminSession;
-        this.shelfDAO = shelfDAO;
-        this.billItemDAO = billItemDAO;
-    }
-
-    void addBillItems(int billID, List<MockBillItemRequest> billItems) {
-        BigDecimal totalAmount = BigDecimal.ZERO;
-
-        for (MockBillItemRequest itemRequest : billItems) {
-            // Fetch Shelf
-            MockShelf shelf = shelfDAO.findByItemAndBatch(itemRequest.itemCode, itemRequest.batchCode);
-
-            if (shelf == null || shelf.quantityOnShelf < itemRequest.quantity) {
-                throw new IllegalArgumentException("Insufficient stock for ItemCode: " + itemRequest.itemCode);
-            }
-
-            // Deduct stock from shelf
-            shelf.quantityOnShelf -= itemRequest.quantity;
-            shelf.updatedBy = adminSession.getLoggedInUserId();
-            shelf.updatedDateTime = LocalDateTime.now();
-
-            // Create BillItem
-            MockBillItem billItem = new MockBillItem();
-            billItem.billID = billID;
-            billItem.itemCode = itemRequest.itemCode;
-            billItem.batchCode = itemRequest.batchCode;
-            billItem.quantity = itemRequest.quantity;
-            billItem.pricePerItem = itemRequest.pricePerItem;
-            billItem.totalItemPrice = itemRequest.totalItemPrice;
-            billItem.updatedBy = adminSession.getLoggedInUserId();
-            billItem.updatedDateTime = LocalDateTime.now();
-
-            billItemDAO.save(billItem);
-            totalAmount = totalAmount.add(billItem.totalItemPrice);
-        }
-    }
-}
-
-// Request class
-class MockBillItemRequest {
-    String itemCode, batchCode;
-    int quantity;
-    BigDecimal pricePerItem, totalItemPrice;
-
-    MockBillItemRequest(String itemCode, String batchCode, int quantity, BigDecimal pricePerItem) {
-        this.itemCode = itemCode;
-        this.batchCode = batchCode;
-        this.quantity = quantity;
-        this.pricePerItem = pricePerItem;
-        this.totalItemPrice = pricePerItem.multiply(BigDecimal.valueOf(quantity));
-    }
-}
-
-// ✅ Actual Test Class
 public class BillItemServiceTest {
-    private MockBillItemService billItemService;
-    private MockAdminSessionForBillItem mockSession;
-    private MockShelfDAO mockShelfDAO;
-    private MockBillItemDAO mockBillItemDAO;
+
+    private BillItemService billItemService;
+    private IBillItemDAO mockBillItemDAO;
+    private IShelfDAO mockShelfDAO;
+    private AdminSession mockSession;
 
     @BeforeEach
     void setUp() {
-        mockSession = Mockito.mock(MockAdminSessionForBillItem.class);
-        mockShelfDAO = Mockito.mock(MockShelfDAO.class);
-        mockBillItemDAO = Mockito.mock(MockBillItemDAO.class);
+        // Mock dependencies
+        mockBillItemDAO = Mockito.mock(IBillItemDAO.class);
+        mockShelfDAO = Mockito.mock(IShelfDAO.class);
+        mockSession = Mockito.mock(AdminSession.class);
 
-        billItemService = new MockBillItemService(mockSession, mockShelfDAO, mockBillItemDAO);
+        // Ensure user is logged in
+        Mockito.when(mockSession.getLoggedInUserId()).thenReturn(1);
+
+        // Inject mocks into service
+//        billItemService = new BillItemService(mockBillItemDAO, mockShelfDAO, mockSession);
     }
 
     @Test
     public void testAddBillItems_SuccessfulInsertion() {
-        Mockito.when(mockSession.getLoggedInUserId()).thenReturn(1);
+        int billID = 101;
+        List<BillItemRequest> billItems = Arrays.asList(
+                new BillItemRequest("ITEM001", "BATCH01", 2, new BigDecimal("50.00"), null)
+        );
 
-        MockShelf mockShelf = new MockShelf("ITEM001", "BATCH01", 20);
+        // Mock shelf availability
+        Shelf mockShelf = new Shelf();
+        mockShelf.setQuantityOnShelf(10);
         Mockito.when(mockShelfDAO.findByItemAndBatch("ITEM001", "BATCH01")).thenReturn(mockShelf);
 
-        MockBillItemRequest request = new MockBillItemRequest("ITEM001", "BATCH01", 5, new BigDecimal("10.00"));
-        List<MockBillItemRequest> requests = List.of(request);
+        // Execute method
+        Assertions.assertDoesNotThrow(() -> billItemService.addBillItems(billID, billItems));
 
-        Assertions.assertDoesNotThrow(() -> billItemService.addBillItems(1, requests));
+        // Capture and verify BillItem
+        ArgumentCaptor<BillItem> billItemCaptor = ArgumentCaptor.forClass(BillItem.class);
+        Mockito.verify(mockBillItemDAO, Mockito.times(1)).save(billItemCaptor.capture());
+        BillItem savedBillItem = billItemCaptor.getValue();
 
-        Mockito.verify(mockBillItemDAO, Mockito.times(1)).save(Mockito.any());
+        Assertions.assertEquals("ITEM001", savedBillItem.getItemCode());
+        Assertions.assertEquals("BATCH01", savedBillItem.getBatchCode());
+        Assertions.assertEquals(2, savedBillItem.getQuantity());
+        Assertions.assertEquals(new BigDecimal("50.00"), savedBillItem.getPricePerItem());
+
+        // Ensure shelf update
+        Assertions.assertEquals(8, mockShelf.getQuantityOnShelf());
+        Mockito.verify(mockShelfDAO, Mockito.times(1)).findByItemAndBatch("ITEM001", "BATCH01");
     }
 
     @Test
     public void testAddBillItems_InsufficientStock_ThrowsException() {
-        Mockito.when(mockSession.getLoggedInUserId()).thenReturn(1);
+        int billID = 101;
+        List<BillItemRequest> billItems = Arrays.asList(
+                new BillItemRequest("ITEM001", "BATCH01", 5, new BigDecimal("50.00"), null)
+        );
 
-        MockShelf mockShelf = new MockShelf("ITEM001", "BATCH01", 2);
+        // Mock shelf with insufficient stock
+        Shelf mockShelf = new Shelf();
+        mockShelf.setQuantityOnShelf(3);
         Mockito.when(mockShelfDAO.findByItemAndBatch("ITEM001", "BATCH01")).thenReturn(mockShelf);
 
-        MockBillItemRequest request = new MockBillItemRequest("ITEM001", "BATCH01", 5, new BigDecimal("10.00"));
-        List<MockBillItemRequest> requests = List.of(request);
+        // Expect an exception
+        Assertions.assertThrows(IllegalArgumentException.class, () -> billItemService.addBillItems(billID, billItems));
 
-        Assertions.assertThrows(IllegalArgumentException.class, () -> billItemService.addBillItems(1, requests));
-
+        // Ensure save() was never called
         Mockito.verifyNoInteractions(mockBillItemDAO);
     }
 
     @Test
     public void testAddBillItems_ShelfNotFound_ThrowsException() {
-        Mockito.when(mockSession.getLoggedInUserId()).thenReturn(1);
+        int billID = 101;
+        List<BillItemRequest> billItems = Arrays.asList(
+                new BillItemRequest("ITEM001", "BATCH01", 2, new BigDecimal("50.00"), null)
+        );
 
-        Mockito.when(mockShelfDAO.findByItemAndBatch("ITEM002", "BATCH02")).thenReturn(null);
+        // Mock shelf as non-existent
+        Mockito.when(mockShelfDAO.findByItemAndBatch("ITEM001", "BATCH01")).thenReturn(null);
 
-        MockBillItemRequest request = new MockBillItemRequest("ITEM002", "BATCH02", 5, new BigDecimal("10.00"));
-        List<MockBillItemRequest> requests = List.of(request);
+        // Expect an exception
+        Assertions.assertThrows(IllegalArgumentException.class, () -> billItemService.addBillItems(billID, billItems));
 
-        Assertions.assertThrows(IllegalArgumentException.class, () -> billItemService.addBillItems(1, requests));
-
+        // Ensure save() was never called
         Mockito.verifyNoInteractions(mockBillItemDAO);
     }
 
     @Test
     public void testAddBillItems_UserNotLoggedIn_ThrowsException() {
+        int billID = 101;
+        List<BillItemRequest> billItems = Arrays.asList(
+                new BillItemRequest("ITEM001", "BATCH01", 2, new BigDecimal("50.00"), null)
+        );
+
+        // Simulate user not logged in
         Mockito.when(mockSession.getLoggedInUserId()).thenReturn(null);
 
-        MockBillItemRequest request = new MockBillItemRequest("ITEM001", "BATCH01", 5, new BigDecimal("10.00"));
-        List<MockBillItemRequest> requests = List.of(request);
+        // Expect an exception
+        Assertions.assertThrows(IllegalStateException.class, () -> billItemService.addBillItems(billID, billItems));
 
-        Assertions.assertThrows(IllegalStateException.class, () -> billItemService.addBillItems(1, requests));
-
+        // Ensure save() was never called
         Mockito.verifyNoInteractions(mockBillItemDAO);
     }
 }

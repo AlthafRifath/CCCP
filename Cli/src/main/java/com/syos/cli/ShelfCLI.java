@@ -1,25 +1,31 @@
 package main.java.com.syos.cli;
 
+import main.java.com.syos.data.model.Shelf;
 import main.java.com.syos.dto.GetShelfDetailsDTO;
 import main.java.com.syos.request.DeleteShelfRequest;
 import main.java.com.syos.request.InsertShelfRequest;
 import main.java.com.syos.request.UpdateShelfRequest;
 import main.java.com.syos.service.ShelfService;
 import main.java.com.syos.service.interfaces.IShelfService;
+import main.java.com.syos.service.notifications.StockNotificationObserver;
+import main.java.com.syos.service.notifications.interfaces.IStockNotifier;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Scanner;
 
 public class ShelfCLI {
     private final IShelfService shelfService;
+    private final IStockNotifier stockNotifiers;
 
     public ShelfCLI() {
         this.shelfService = new ShelfService();
+        this.stockNotifiers = new StockNotificationObserver();
     }
 
     public void start() {
         Scanner scanner = new Scanner(System.in);
+
+        notifyAllLowStockItems();
 
         while (true) {
             System.out.println("\n=== Shelf Management ===");
@@ -50,6 +56,15 @@ public class ShelfCLI {
                 }
                 default -> System.out.println("Invalid choice. Try again.");
             }
+        }
+    }
+
+    private void notifyAllLowStockItems() {
+        System.out.println("Checking for low stock items...\n");
+
+        List<Shelf> shelves = shelfService.getAllShelves();
+        for (Shelf shelf : shelves) {
+            stockNotifiers.notifyStockLevel(shelf);
         }
     }
 

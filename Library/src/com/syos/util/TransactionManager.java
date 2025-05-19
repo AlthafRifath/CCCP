@@ -1,11 +1,10 @@
 package com.syos.util;
 
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
 public class TransactionManager {
-    private static final SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+    private static final SessionPool sessionPool = new SessionPool(HibernateUtil.getSessionFactory());
 
     /**
      * Execute a task within a Hibernate transaction.
@@ -14,23 +13,25 @@ public class TransactionManager {
      * @param <T>  The return type of the task.
      * @return The result of the task.
      */
-    public static <T> T execute(TransactionAction<T> action) {
+    public static <T> T execute(ITransactionManager<T> action) {
         Transaction transaction = null;
-        try (Session session = sessionFactory.openSession()) {
+        Session session = null;
+        try {
+            session = sessionPool.borrowSession();
             transaction = session.beginTransaction();
-            T result = action.perform(session); // Execute the action
-            transaction.commit(); // Commit transaction
+            T result = action.perform(session);
+            transaction.commit();
             return result;
-        } catch (Exception ex) {
+        } catch (Exception e) {
             if (transaction != null && transaction.isActive()) {
-                transaction.rollback(); // Rollback if the transaction is active
+                transaction.rollback();
             }
-            throw new RuntimeException("Transaction failed: " + ex.getMessage(), ex);
+            throw new RuntimeException("Transaction failed: " + e.getMessage(), e);
+        } finally {
+            if (session != null) {
+                session.clear(); // Clear state before returning
+                sessionPool.returnSession(session);
+            }
         }
-    }
-
-    @FunctionalInterface
-    public interface TransactionAction<T> {
-        T perform(Session session);
     }
 }

@@ -1,0 +1,42 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="WebApi:Web exploded">
+    <output-path>$PROJECT_DIR$/out/artifacts/WebApi_Web_exploded</output-path>
+    <root id="root">
+      <element id="javaee-facet-resources" facet="WebApi/web/Web" />
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="WebApi" />
+          <element id="module-output" name="Library" />
+          <element id="module-output" name="Data" />
+          <element id="module-output" name="Service" />
+          <element id="module-output" name="Public" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="file-copy" path="$PROJECT_DIR$/Library/lib/antlr-4.13.2-complete.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/Library/lib/byte-buddy-1.14.8.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/Library/lib/byte-buddy-agent-1.14.14.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/Library/lib/classmate-1.5.1.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/Library/lib/dom4j-2.1.4.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/Library/lib/hibernate-core-6.6.4.Final.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/Library/lib/hibernate-commons-annotations-6.0.6.Final.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/Library/lib/istack-commons-runtime-4.1.1.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/Library/lib/jakarta.activation-api-2.0.1.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/Library/lib/jakarta.persistence-api-3.2.0.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/Library/lib/jakarta.transaction-api-2.0.1.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/Library/lib/jaxb-core-3.0.2.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/Library/lib/jakarta.xml.bind-api-3.0.1.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/Library/lib/jaxb-runtime-3.0.2.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/Library/lib/jboss-logging-3.5.0.Final.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/Library/lib/junit-jupiter-api-5.11.0.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/Library/lib/junit-jupiter-engine-5.11.0.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/Library/lib/junit-platform-commons-1.11.0.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/Library/lib/log4j-1.2.17.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/Library/lib/mssql-jdbc-12.8.1.jre11.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/Library/lib/mockito-junit-jupiter-5.11.0.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/Library/lib/mockito-core-5.11.0.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/Library/lib/junit-platform-engine-1.11.0.jar" />
+        </element>
+      </element>
+    </root>
+  </artifact>
+</component>
