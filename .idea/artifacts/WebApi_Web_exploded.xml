@@ -35,6 +35,7 @@
           <element id="file-copy" path="$PROJECT_DIR$/Library/lib/mockito-junit-jupiter-5.11.0.jar" />
           <element id="file-copy" path="$PROJECT_DIR$/Library/lib/mockito-core-5.11.0.jar" />
           <element id="file-copy" path="$PROJECT_DIR$/Library/lib/junit-platform-engine-1.11.0.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/Library/lib/gson-2.13.1.jar" />
         </element>
       </element>
     </root>

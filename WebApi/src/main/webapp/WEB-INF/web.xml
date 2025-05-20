@@ -13,4 +13,24 @@
         <url-pattern>/api/client</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>CustomerSignupServlet</servlet-name>
+        <servlet-class>com.syos.api.CustomerSignupServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>CustomerSignupServlet</servlet-name>
+        <url-pattern>/api/customer/signup</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>CustomerLoginServlet</servlet-name>
+        <servlet-class>com.syos.api.CustomerLoginServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>CustomerLoginServlet</servlet-name>
+        <url-pattern>/api/customer/login</url-pattern>
+    </servlet-mapping>
+
 </web-app>

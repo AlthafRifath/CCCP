@@ -19,6 +19,11 @@ public class TransactionManager {
         try {
             session = sessionPool.borrowSession();
             transaction = session.beginTransaction();
+
+            /// Concurrency Log
+            System.out.println("[TransactionManager] Thread: " + Thread.currentThread().getName() +
+                    " - Using session: " + session.hashCode());
+
             T result = action.perform(session);
             transaction.commit();
             return result;
@@ -29,7 +34,7 @@ public class TransactionManager {
             throw new RuntimeException("Transaction failed: " + e.getMessage(), e);
         } finally {
             if (session != null) {
-                session.clear(); // Clear state before returning
+                session.clear(); /// Clear state before returning
                 sessionPool.returnSession(session);
             }
         }
