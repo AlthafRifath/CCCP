@@ -33,4 +33,25 @@
         <url-pattern>/api/customer/login</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>ProductListServlet</servlet-name>
+        <servlet-class>com.syos.api.ProductListServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>ProductListServlet</servlet-name>
+        <url-pattern>/api/products</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>ProductDetailServlet</servlet-name>
+        <servlet-class>com.syos.api.ProductDetailServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>ProductDetailServlet</servlet-name>
+        <url-pattern>/api/product</url-pattern>
+    </servlet-mapping>
+
+
 </web-app>
