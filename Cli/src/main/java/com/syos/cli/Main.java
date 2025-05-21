@@ -20,11 +20,19 @@ public class Main {
                 System.out.println("3. Manage Shelf Stock");
                 System.out.println("4. Manage Bills");
                 System.out.println("5. Generate Reports");
-                System.out.println("6. Exit");
+                System.out.println("6. Manage Web Shop Inventory");
+                System.out.println("7. Exit");
                 System.out.print("Enter your choice: ");
 
-                int choice = scanner.nextInt();
-                scanner.nextLine(); // Consume newline
+                int choice;
+                if (scanner.hasNextInt()) {
+                    choice = scanner.nextInt();
+                    scanner.nextLine(); // consume newline
+                } else {
+                    System.out.println("Invalid input. Please enter a number.");
+                    scanner.next(); // discard invalid input
+                    continue;
+                }
 
                 switch (choice) {
                     case 1:
@@ -53,6 +61,10 @@ public class Main {
                         reportCLI.start();
                         break;
                     case 6:
+                        WebShopInventoryCLI webShopInventoryCLI = new WebShopInventoryCLI();
+                        webShopInventoryCLI.start();
+                        break;
+                    case 7:
                         System.out.println("Exiting the application. Goodbye!");
                         scanner.close();
                         return;

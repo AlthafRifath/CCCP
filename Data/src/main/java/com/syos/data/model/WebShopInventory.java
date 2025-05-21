@@ -1,6 +1,8 @@
 package main.java.com.syos.data.model;
 
 import jakarta.persistence.*;
+
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Objects;
 
@@ -20,12 +22,18 @@ public class WebShopInventory {
     @Column(name = "BatchCode")
     private String batchCode;
 
+    @Column(name = "ItemName", nullable = false)
+    private String itemName;
+
+    @Column(name = "ImageUrl", nullable = false)
+    private String imageUrl;
+
     @Column(name = "QuantityOnline", nullable = false)
     private int quantityOnline;
 
     @Column(name = "LastUpdatedDate", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    private Date lastUpdatedDate;
+    private LocalDateTime lastUpdatedDate;
 
     @Column(name = "IsDeleted", nullable = false)
     private boolean isDeleted;
@@ -35,7 +43,7 @@ public class WebShopInventory {
 
     @Column(name = "UpdatedDateTime", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    private Date updatedDateTime;
+    private LocalDateTime updatedDateTime;
 
     // Relationships
     @ManyToOne
@@ -74,6 +82,22 @@ public class WebShopInventory {
         this.batchCode = batchCode;
     }
 
+    public String getItemName() {
+        return itemName;
+    }
+
+    public void setItemName(String itemName) {
+        this.itemName = itemName;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
     public int getQuantityOnline() {
         return quantityOnline;
     }
@@ -82,11 +106,11 @@ public class WebShopInventory {
         this.quantityOnline = quantityOnline;
     }
 
-    public Date getLastUpdatedDate() {
+    public LocalDateTime getLastUpdatedDate() {
         return lastUpdatedDate;
     }
 
-    public void setLastUpdatedDate(Date lastUpdatedDate) {
+    public void setLastUpdatedDate(LocalDateTime lastUpdatedDate) {
         this.lastUpdatedDate = lastUpdatedDate;
     }
 
@@ -106,11 +130,11 @@ public class WebShopInventory {
         this.updatedBy = updatedBy;
     }
 
-    public Date getUpdatedDateTime() {
+    public LocalDateTime getUpdatedDateTime() {
         return updatedDateTime;
     }
 
-    public void setUpdatedDateTime(Date updatedDateTime) {
+    public void setUpdatedDateTime(LocalDateTime updatedDateTime) {
         this.updatedDateTime = updatedDateTime;
     }
 
