@@ -53,5 +53,45 @@
         <url-pattern>/api/product</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>ViewCartServlet</servlet-name>
+        <servlet-class>com.syos.api.ViewCartServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>ViewCartServlet</servlet-name>
+        <url-pattern>/api/cart</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>AddToCartServlet</servlet-name>
+        <servlet-class>com.syos.api.AddToCartServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>AddToCartServlet</servlet-name>
+        <url-pattern>/api/cart/add</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>CheckoutServlet</servlet-name>
+        <servlet-class>com.syos.api.CheckoutServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>CheckoutServlet</servlet-name>
+        <url-pattern>/api/checkout</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>CustomerLogoutServlet</servlet-name>
+        <servlet-class>com.syos.api.CustomerLogoutServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>CustomerLogoutServlet</servlet-name>
+        <url-pattern>/api/customer/logout</url-pattern>
+    </servlet-mapping>
+
 
 </web-app>
