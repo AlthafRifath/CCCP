@@ -24,7 +24,8 @@ public class CustomerAuthService implements ICustomerAuthService {
         );
 
         if (isValid) {
-            return new LoginDTO(true, "Login successful!");
+            Customer customer = customerDAO.findByEmailOnly(loginRequest.getEmail());
+            return new LoginDTO(true, "Login successful!", customer.getCustomerID());
         } else {
             return new LoginDTO(false, "Invalid email or password.");
         }
@@ -48,9 +49,12 @@ public class CustomerAuthService implements ICustomerAuthService {
 
         boolean success = customerDAO.save(customer);
 
-        return success
-                ? new LoginDTO(true, "Registration successful.")
-                : new LoginDTO(false, "Registration failed.");
+        if (success) {
+            Customer created = customerDAO.findByEmailOnly(customer.getEmail());
+            return new LoginDTO(true, "Registration successful.", created.getCustomerID());
+        } else {
+            return new LoginDTO(false, "Registration failed.");
+        }
     }
 
 }

@@ -7,4 +7,5 @@ public interface ICustomerDAO {
     boolean isEmailTaken(String email);
     boolean save(Customer customer);
     Customer getByEmailAndPassword(String email, String password);
+    Customer findByEmailOnly(String email);
 }
