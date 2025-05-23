@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Checkout</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900">
+<div class="max-w-3xl mx-auto px-4 py-12">
+    <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-6">Checkout</h2>
+    <div class="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md space-y-6">
+
+        <!-- Card Info Section -->
+        <form id="checkoutForm" class="space-y-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Card Number</label>
+                <input type="text" name="cardNumber" placeholder="1234 5678 9012 3456" required
+                       class="w-full px-4 py-2 border rounded-md focus:ring focus:border-blue-400 dark:bg-gray-700 dark:text-white">
+            </div>
+
+            <div class="flex gap-4">
+                <div class="flex-1">
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Expiry Date</label>
+                    <input type="text" name="expiry" placeholder="MM/YY" required
+                           class="w-full px-4 py-2 border rounded-md focus:ring focus:border-blue-400 dark:bg-gray-700 dark:text-white">
+                </div>
+                <div class="flex-1">
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">CVV</label>
+                    <input type="password" name="cvv" placeholder="123" required
+                           class="w-full px-4 py-2 border rounded-md focus:ring focus:border-blue-400 dark:bg-gray-700 dark:text-white">
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Cardholder Name</label>
+                <input type="text" name="cardName" placeholder="John Doe" required
+                       class="w-full px-4 py-2 border rounded-md focus:ring focus:border-blue-400 dark:bg-gray-700 dark:text-white">
+            </div>
+
+            <!-- Hidden or JavaScript-computed cart total -->
+            <div class="mt-6 flex justify-between items-center">
+                <p class="text-lg font-semibold text-gray-900 dark:text-white">Total: <span id="totalAmount">Rs. 0.00</span></p>
+                <button type="submit"
+                        class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">
+                    Pay Now
+                </button>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+<script>
+    // Fetch and show the total from the cart
+    async function fetchCartTotal() {
+        try {
+            const res = await fetch("/SYOS/api/cart");
+            const cartItems = await res.json();
+            let total = 0;
+            cartItems.forEach(item => total += item.price * item.quantity);
+            document.getElementById("totalAmount").textContent = "Rs. " + total.toFixed(2);
+        } catch (err) {
+            console.error("Failed to load cart total:", err);
+        }
+    }
+
+    document.getElementById("checkoutForm").addEventListener("submit", async function (e) {
+        e.preventDefault();
+
+        try {
+            const res = await fetch("/SYOS/api/checkout", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ cashTendered: 100000000 })  // Simulate card payment
+            });
+
+            const result = await res.json();
+
+            if (res.ok) {
+                alert("Payment successful!");
+                // Save result to localStorage for receipt.html
+                localStorage.setItem("checkoutReceipt", JSON.stringify(result));
+                window.location.href = "receipt.html";
+            } else {
+                alert("Checkout failed: " + (result.message || "Unknown error"));
+            }
+
+        } catch (err) {
+            alert("An unexpected error occurred during checkout.");
+            console.error(err);
+        }
+    });
+
+    // Initial load
+    fetchCartTotal();
+</script>
+
+</body>
+</html>

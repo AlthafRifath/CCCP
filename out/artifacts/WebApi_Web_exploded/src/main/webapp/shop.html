@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Eser Market - Shop</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-800">
+<section class="py-8 antialiased">
+    <div class="max-w-screen-xl mx-auto px-4">
+        <!-- Heading & Filters -->
+        <div class="mb-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div>
+                <h2 class="text-3xl font-bold text-gray-900">Shop</h2>
+                <p class="text-gray-500">Explore our online shop products</p>
+            </div>
+            <div class="flex gap-3">
+                <a href="cart.html" class="px-4 py-2 border rounded-lg bg-white hover:bg-gray-100 text-sm">
+                    🛒
+                </a>
+                <button onclick="logout()" class="px-4 py-2 border rounded-lg bg-white hover:bg-gray-100 text-sm">
+                    Logout
+                </button>
+            </div>
+        </div>
+
+        <!-- Product Grid -->
+        <div id="productList" class="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+            <!-- Cards will be injected here -->
+        </div>
+    </div>
+</section>
+
+<script>
+    async function loadProducts() {
+        try {
+            const res = await fetch("/SYOS/api/products");
+            const products = await res.json();
+            const container = document.getElementById("productList");
+
+            products.forEach(p => {
+                const card = document.createElement("div");
+                card.className = "bg-white border rounded-lg p-4 shadow-sm flex flex-col";
+
+                card.innerHTML = `
+        <img src="${p.imageUrl}" alt="${p.itemName}" class="w-full h-48 object-cover rounded-md mb-3" />
+        <div class="flex-grow">
+          <h3 class="text-lg font-semibold">${p.itemName}</h3>
+          <p class="text-sm text-gray-500 mt-1">Batch: ${p.batchCode}</p>
+        </div>
+        <div class="mt-3">
+          <span class="text-xl font-bold text-blue-600">Rs. ${p.price.toFixed(2)}</span>
+        </div>
+        <div class="mt-4 flex gap-2 items-center">
+          <input type="number" min="1" value="1" id="qty-${p.itemCode}-${p.batchCode}" class="w-16 border rounded px-2 py-1 text-sm" />
+          <button class="flex-1 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm" onclick="addToCart('${p.itemCode}', '${p.batchCode}')">
+            Add to Cart
+          </button>
+        </div>
+      `;
+
+                container.appendChild(card);
+            });
+        } catch (err) {
+            alert("Error loading products: " + err);
+        }
+    }
+
+    async function addToCart(itemCode, batchCode) {
+        const qtyInput = document.getElementById(`qty-${itemCode}-${batchCode}`);
+        const quantity = parseInt(qtyInput.value);
+        const res = await fetch("/SYOS/api/cart/add", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ itemCode, batchCode, quantity })
+        });
+        const result = await res.json();
+        alert(result.message);
+    }
+
+    window.onload = loadProducts;
+
+    async function logout() {
+        try {
+            const res = await fetch("/SYOS/api/customer/logout", {
+                method: "POST"
+            });
+            if (res.ok) {
+                alert("Logged out successfully.");
+                window.location.href = "login.html";
+            } else {
+                alert("Logout failed.");
+            }
+        } catch (err) {
+            console.error("Logout error:", err);
+            alert("Error logging out.");
+        }
+    }
+</script>
+</body>
+</html>

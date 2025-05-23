@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Your Shopping Cart</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 min-h-screen">
+<div class="max-w-screen-xl mx-auto px-4 py-8">
+    <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-6">Shopping Cart</h2>
+    <div id="cartContainer" class="space-y-6">
+        <!-- Cart items will be inserted here -->
+    </div>
+    <div class="mt-8 flex justify-between items-center">
+        <p id="cartTotal" class="text-xl font-semibold text-gray-900 dark:text-white">Total: Rs. 0.00</p>
+        <a href="checkout.html" class="bg-blue-600 text-white px-6 py-3 rounded hover:bg-blue-700">Proceed to Checkout</a>
+    </div>
+</div>
+
+<script>
+    async function loadCart() {
+        const res = await fetch("/SYOS/api/cart");
+        const cartItems = await res.json();
+        const cartContainer = document.getElementById("cartContainer");
+
+        let total = 0;
+        cartItems.forEach((item, index) => {
+            const itemTotal = item.price * item.quantity;
+            total += itemTotal;
+
+            const card = document.createElement("div");
+            card.className = "rounded-lg border bg-white p-6 shadow-sm flex gap-6 items-center";
+
+            card.innerHTML = `
+          <img src="${item.imageUrl}" alt="${item.itemName}" class="w-20 h-20 object-cover rounded" />
+          <div class="flex-1 space-y-2">
+            <h3 class="font-semibold text-gray-900">${item.itemName}</h3>
+            <p class="text-sm text-gray-600">Rs. ${item.price.toFixed(2)} x ${item.quantity}</p>
+            <p class="text-sm font-bold text-gray-800">Total: Rs. ${itemTotal.toFixed(2)}</p>
+          </div>
+          <div class="flex flex-col gap-2">
+            <button class="text-red-500 hover:underline text-sm" onclick="removeItem('${item.itemCode}', '${item.batchCode}')">Remove</button>
+          </div>
+        `;
+            cartContainer.appendChild(card);
+        });
+
+        document.getElementById("cartTotal").textContent = "Total: Rs. " + total.toFixed(2);
+    }
+
+    async function removeItem(itemCode, batchCode) {
+        const res = await fetch(`/SYOS/api/cart/remove`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ itemCode, batchCode })
+        });
+
+        const result = await res.json();
+        alert(result.message);
+        location.reload();
+    }
+
+    loadCart();
+</script>
+</body>
+</html>

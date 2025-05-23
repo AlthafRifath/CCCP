@@ -40,6 +40,10 @@
       </element>
       <element id="file-copy" path="$PROJECT_DIR$/WebApi/src/main/webapp/login.html" />
       <element id="file-copy" path="$PROJECT_DIR$/WebApi/src/main/webapp/signup.html" />
+      <element id="file-copy" path="$PROJECT_DIR$/WebApi/src/main/webapp/shop.html" />
+      <element id="file-copy" path="$PROJECT_DIR$/WebApi/src/main/webapp/cart.html" />
+      <element id="file-copy" path="$PROJECT_DIR$/WebApi/src/main/webapp/checkout.html" />
+      <element id="file-copy" path="$PROJECT_DIR$/WebApi/src/main/webapp/receipt.html" />
     </root>
   </artifact>
 </component>
