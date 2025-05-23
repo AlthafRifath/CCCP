@@ -9,7 +9,7 @@ public class SessionPool {
 
     private final BlockingQueue<Session> pool;
     private final SessionFactory sessionFactory;
-    private final int MAX_POOL_SIZE = 10;
+    private final int MAX_POOL_SIZE = 20;
 
     public SessionPool(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;

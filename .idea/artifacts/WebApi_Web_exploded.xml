@@ -38,6 +38,8 @@
           <element id="file-copy" path="$PROJECT_DIR$/Library/lib/gson-2.13.1.jar" />
         </element>
       </element>
+      <element id="file-copy" path="$PROJECT_DIR$/WebApi/src/main/webapp/login.html" />
+      <element id="file-copy" path="$PROJECT_DIR$/WebApi/src/main/webapp/signup.html" />
     </root>
   </artifact>
 </component>
