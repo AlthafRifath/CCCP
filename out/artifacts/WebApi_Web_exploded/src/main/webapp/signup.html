@@ -55,7 +55,7 @@
             });
 
             const result = await res.json();
-            alert(result.message);
+            console.log(result.message);
 
             if (result.success) {
                 window.location.href = "login.html";

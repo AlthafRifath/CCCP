@@ -77,7 +77,7 @@
             const result = await res.json();
 
             if (res.ok) {
-                alert("Payment successful!");
+                console.log("Payment successful!");
                 // Save result to localStorage for receipt.html
                 localStorage.setItem("checkoutReceipt", JSON.stringify(result));
                 window.location.href = "receipt.html";

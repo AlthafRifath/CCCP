@@ -7,7 +7,6 @@
         <servlet-name>ClientTestServlet</servlet-name>
         <servlet-class>com.syos.api.ClientTestServlet</servlet-class>
     </servlet>
-
     <servlet-mapping>
         <servlet-name>ClientTestServlet</servlet-name>
         <url-pattern>/api/client</url-pattern>
@@ -17,7 +16,6 @@
         <servlet-name>CustomerSignupServlet</servlet-name>
         <servlet-class>com.syos.api.CustomerSignupServlet</servlet-class>
     </servlet>
-
     <servlet-mapping>
         <servlet-name>CustomerSignupServlet</servlet-name>
         <url-pattern>/api/customer/signup</url-pattern>
@@ -27,7 +25,6 @@
         <servlet-name>CustomerLoginServlet</servlet-name>
         <servlet-class>com.syos.api.CustomerLoginServlet</servlet-class>
     </servlet>
-
     <servlet-mapping>
         <servlet-name>CustomerLoginServlet</servlet-name>
         <url-pattern>/api/customer/login</url-pattern>
@@ -37,7 +34,6 @@
         <servlet-name>ProductListServlet</servlet-name>
         <servlet-class>com.syos.api.ProductListServlet</servlet-class>
     </servlet>
-
     <servlet-mapping>
         <servlet-name>ProductListServlet</servlet-name>
         <url-pattern>/api/products</url-pattern>
@@ -47,7 +43,6 @@
         <servlet-name>ProductDetailServlet</servlet-name>
         <servlet-class>com.syos.api.ProductDetailServlet</servlet-class>
     </servlet>
-
     <servlet-mapping>
         <servlet-name>ProductDetailServlet</servlet-name>
         <url-pattern>/api/product</url-pattern>
@@ -57,7 +52,6 @@
         <servlet-name>ViewCartServlet</servlet-name>
         <servlet-class>com.syos.api.ViewCartServlet</servlet-class>
     </servlet>
-
     <servlet-mapping>
         <servlet-name>ViewCartServlet</servlet-name>
         <url-pattern>/api/cart</url-pattern>
@@ -67,7 +61,6 @@
         <servlet-name>AddToCartServlet</servlet-name>
         <servlet-class>com.syos.api.AddToCartServlet</servlet-class>
     </servlet>
-
     <servlet-mapping>
         <servlet-name>AddToCartServlet</servlet-name>
         <url-pattern>/api/cart/add</url-pattern>
@@ -77,7 +70,6 @@
         <servlet-name>CheckoutServlet</servlet-name>
         <servlet-class>com.syos.api.CheckoutServlet</servlet-class>
     </servlet>
-
     <servlet-mapping>
         <servlet-name>CheckoutServlet</servlet-name>
         <url-pattern>/api/checkout</url-pattern>
@@ -87,11 +79,32 @@
         <servlet-name>CustomerLogoutServlet</servlet-name>
         <servlet-class>com.syos.api.CustomerLogoutServlet</servlet-class>
     </servlet>
-
     <servlet-mapping>
         <servlet-name>CustomerLogoutServlet</servlet-name>
         <url-pattern>/api/customer/logout</url-pattern>
     </servlet-mapping>
 
+    <!-- Auth Filter -->
+    <filter>
+        <filter-name>AuthFilter</filter-name>
+        <filter-class>com.syos.api.AuthFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>AuthFilter</filter-name>
+        <url-pattern>/shop.html</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>AuthFilter</filter-name>
+        <url-pattern>/cart.html</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>AuthFilter</filter-name>
+        <url-pattern>/checkout.html</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>AuthFilter</filter-name>
+        <url-pattern>/receipt.html</url-pattern>
+    </filter-mapping>
 
 </web-app>

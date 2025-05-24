@@ -75,7 +75,7 @@
             body: JSON.stringify({ itemCode, batchCode, quantity })
         });
         const result = await res.json();
-        alert(result.message);
+        console.log(result.message);
     }
 
     window.onload = loadProducts;
@@ -86,7 +86,8 @@
                 method: "POST"
             });
             if (res.ok) {
-                alert("Logged out successfully.");
+                sessionStorage.removeItem("isLoggedIn");
+                console.log("Logged out successfully.");
                 window.location.href = "login.html";
             } else {
                 alert("Logout failed.");
